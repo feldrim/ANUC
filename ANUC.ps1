@@ -1,10 +1,26 @@
-ï»¿#========================================================================
-# Date: 10/2/2011 8:34 PM
-# Author: Rich Prescott
-# Blog: blog.richprescott.com
-# Twitter: twitter.com/Rich_Prescott
-# Link: http://blog.richprescott.com/2011/10/arposh-new-user-creation-anuc.html
 #========================================================================
+# Date: 3/2/2013 7:34 PM
+# Author:Rich Prescott
+# updated by: Gabriel Jensen
+#                      :Jim Smith (v1.3)
+# http://community.spiceworks.com/scripts/show/1917-active-directory-user-creation-tool
+#========================================================================
+
+#For debugging
+$oldVerbosePreference = $VerbosePreference
+#$VerbosePreference = "Continue";
+
+$XMLOptions = "ANUC.Options.xml" #change to desired XML file name
+
+#----------------------------------------------
+#region Import Main Assemblies
+#----------------------------------------------
+	Import-Module ActiveDirectory
+	Add-PSSnapin Microsoft.Exchange.Management.PowerShell.E2010
+	. $env:ExchangeInstallPath\bin\RemoteExchange.ps1
+	Connect-ExchangeServer -auto
+	[System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
+#endregion Import Main Assemblies
 #----------------------------------------------
 #region Application Functions
 #----------------------------------------------
@@ -12,7 +28,7 @@
 function OnApplicationLoad {
 $CreateXML = @"
 <?xml version="1.0" standalone="no"?>
-<OPTIONS Product="Arposh New User Creation" Version="1.2">
+<OPTIONS Product="AD New User Creation" Version="1.3">
  <Settings>
   <sAMAccountName Generate="True">
    <Style Format="FirstName.LastName" Enabled="True" />
@@ -28,56 +44,58 @@ $CreateXML = @"
    <Style Format="FirstName LastName" Enabled="False" />
    <Style Format="LastName, FirstName" Enabled="True" />
   </DisplayName>
+  <LowerCaseUserNames Enabled="True" />
   <AccountStatus Enabled="True" />
   <Password ChangeAtLogon="True" />
+  <DomainController>YOUR.DOMAIN-CONTROLLER.COM</DomainController>
+  <DomainNS>YOURDOMAIN</DomainNS>
+  <ScriptPath>LOGIN_SCRIPT.bat</ScriptPath>
+  <UserDirectory>\\SERVER\Users\</UserDirectory>
+  <HomeDrive>U:</HomeDrive>
+  <HomePage>http://your.homepage.com/</HomePage>
  </Settings>
  <Default>
-  <Domain>RU.lab</Domain>
-  <Path>OU=MyOU,DC=ru,DC=lab</Path>
+  <Domain>awesome.local</Domain>
+  <Path>OU=MyOU,DC=awesome,DC=local</Path>
   <FirstName></FirstName>
   <LastName></LastName>
   <Office></Office>
   <Title></Title>
   <Description>Full-Time Employee</Description>
   <Department>IT</Department>
-  <Company>Arposh</Company>
-  <Phone>212-555-1000</Phone>
-  <Site>NY</Site>
-  <StreetAddress>100 Main Street</StreetAddress>
-  <City>New York</City>
-  <State>NY</State>
-  <PostalCode>10001</PostalCode>
+  <Company>Awesome Inc.</Company>
+  <Site>TN</Site>
+  <Country>US</Country>
   <Password>P@ssw0rd</Password>
+  <Group>Normal User</Group>
  </Default>
  <Locations>
-  <Location Site="NY">
+  <Location Site="TN">
    <StreetAddress>1 Main Street</StreetAddress>
-   <City>New York</City>
-   <State>NY</State>
+   <City>Nashville</City>
+   <State>TN</State>
    <PostalCode>10001</PostalCode>
-  </Location>
-  <Location Site="NJ">
-   <StreetAddress>2 Main Street</StreetAddress>
-   <City>Edison</City>
-   <State>NJ</State>
-   <PostalCode>22222</PostalCode>
+   <Phone>888-555-0000</Phone>
+   <Fax>888-555-0000</Fax>
   </Location>
   <Location Site="Custom">
    <StreetAddress></StreetAddress>
    <City></City>
    <State></State>
    <PostalCode></PostalCode>
+   <Phone></Phone>
+   <Fax></Fax>
   </Location>
  </Locations>
  <Domains>
-  <Domain Name="RU.lab">
-   <Path>OU=MyOU,DC=ru,DC=lab</Path>
-   <Path>CN=Users,DC=ru,DC=lab</Path>
+  <Domain Name="awesome.local">
+   <Path>OU=MyOU,DC=awesome,DC=local</Path>
+   <Path>CN=Users,DC=awesome,DC=local</Path>
   </Domain>
-  <Domain Name="RP.lab">
-   <Path>OU=RPUsers1,DC=rp,DC=lab</Path>
-   <Path>OU=RPUsers2,DC=rp,DC=lab</Path>
-   <Path>OU=RPUsers3,DC=rp,DC=lab</Path>
+  <Domain Name="awesome.lab">
+   <Path>OU=RPUsers1,DC=awesome,DC=lab</Path>
+   <Path>OU=RPUsers2,DC=awesome,DC=lab</Path>
+   <Path>OU=RPUsers3,DC=awesome,DC=lab</Path>
   </Domain>
  </Domains>
  <Descriptions>
@@ -98,12 +116,38 @@ $CreateXML = @"
   <Department>Human Resources</Department>
   <Department>Security</Department>
  </Departments>
+ <JobTitles>
+  <JobTitle>Accountant</JobTitle>
+  <JobTitle>Project Manager</JobTitle>
+  <JobTitle>Intern</JobTitle>
+  <JobTitle>Office Administrator</JobTitle>
+ </JobTitles>
+ <Groups>
+  <Group Name="Normal User">
+   <List Type="SecurityGroup">Awesome Users</List>
+   <List Type="ComboGroup">Security and Distribution List</List>
+   <List Type="DistributionList">Awesome List</List>
+  </Group>
+  <Group Name="Administrator">
+   <List Type="SecurityGroup">Admin Users</List>
+   <List Type="SecurityGroup">Awesome Users</List>
+   <List Type="ComboGroup">Security and Distribution List</List>
+   <List Type="DistributionList">Awesome List</List>
+  </Group>
+ </Groups>
+ <SecurityGroups>
+  <SecurityGroup>Awesome Users</SecurityGroup>
+  <SecurityGroup>Admin Users</SecurityGroup>
+ </SecurityGroups>
+  <ComboGroups>
+   <ComboGroup>Security and Distribution List</ComboGroup>
+  </ComboGroups>
+ <DistributionLists>
+  <DistributionList>Awesome List</DistributionList>
+ </DistributionLists>
 </OPTIONS>
 "@
 	
-	Import-Module ActiveDirectory
-	[System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
-	$XMLOptions = "ANUC.Options.xml"
 	$Script:ParentFolder = Split-Path (Get-Variable MyInvocation -scope 1 -ValueOnly).MyCommand.Definition
 	$XMLFile = Join-Path $ParentFolder $XMLOptions
 	
@@ -120,17 +164,18 @@ $CreateXML = @"
         else{Exit}
 	}
 	else{[XML]$Script:XML = Get-Content $XMLFile}
-    if($XML.Options.Version -ne ([xml]$CreateXML).Options.Version)
+    if($XML.Options.Version -ne ([XML]$CreateXML).Options.Version)
         {
         $VersionMsg = "You are using an older version of the Options file.  Please generate a new Options file and transfer your settings.`r`nIn Use: $($XML.Options.Version) `r`nLatest: $(([xml]$CreateXML).Options.Version)"
         [System.Windows.Forms.MessageBox]::Show($VersionMsg,"Warning",[System.Windows.Forms.MessageBoxButtons]::Ok)
         }
     else{}
-	return $true#return true for success or false for failure
+	return $true #return true for success or false for failure
 }
 
 function OnApplicationExit {
-	Remove-Module ActiveDirectory	
+	Remove-PSSnapin -Name Microsoft.Exchange.Management.PowerShell.E2010
+	Remove-Module -Name ActiveDirectory	
 	$script:ExitCode = 0 #Set the exit code for the Packager
 }
 
@@ -142,6 +187,11 @@ Function Set-sAMAccountName {
         $SurName = $txtLastName.text
         }
     else{}
+    if($XML.Options.Settings.LowerCaseUserNames.Enabled -eq "True")
+        {
+        $GivenName = $GivenName.ToLower()
+        $SurName = $SurName.ToLower()
+        }
     Switch($XML.Options.Settings.sAMAccountName.Style | Where{$_.Enabled -eq $True} | Select -ExpandProperty Format)
         {
         "FirstName.LastName"    {"{0}.{1}" -f $GivenName,$Surname}
@@ -160,6 +210,11 @@ Function Set-UPN {
         $Domain = $cboDomain.Text
         }
     else{}
+    if($XML.Options.Settings.LowerCaseUserNames.Enabled -eq "True")
+        {
+        $GivenName = $GivenName.ToLower()
+        $SurName = $SurName.ToLower()
+        }
     Switch($XML.Options.Settings.UPN.Style | Where{$_.Enabled -eq $True} | Select -ExpandProperty Format)
         {
         "FirstName.LastName"    {"{0}.{1}@{2}" -f $GivenName,$Surname,$Domain}
@@ -185,15 +240,16 @@ Function Set-DisplayName {
         }
     }
 #endregion Application Functions
+#----------------------------------------------
+#region Form Functions
+#----------------------------------------------
 
-#----------------------------------------------
-# Generated Form Function
-#----------------------------------------------
 function Call-ANUC_pff {
 
 	#----------------------------------------------
-	#region Import the Assemblies
+	#region Import Form Assemblies
 	#----------------------------------------------
+
 	[void][reflection.assembly]::Load("System.DirectoryServices, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 	[void][reflection.assembly]::Load("System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
 	[void][reflection.assembly]::Load("System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
@@ -202,11 +258,11 @@ function Call-ANUC_pff {
 	[void][reflection.assembly]::Load("System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
 	[void][reflection.assembly]::Load("mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
 	[void][reflection.assembly]::Load("System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
-	#endregion Import Assemblies
-
+	#endregion Import Form Assemblies
 	#----------------------------------------------
 	#region Generated Form Objects
 	#----------------------------------------------
+
 	[System.Windows.Forms.Application]::EnableVisualStyles()
 	$formMain = New-Object System.Windows.Forms.Form
 	$btnSubmitAll = New-Object System.Windows.Forms.Button
@@ -216,46 +272,82 @@ function Call-ANUC_pff {
 	$btnFirst = New-Object System.Windows.Forms.Button
 	$btnImportCSV = New-Object System.Windows.Forms.Button
 	$lvCSV = New-Object System.Windows.Forms.ListView
+
+	$cboGroup = New-Object System.Windows.Forms.ComboBox #20141120
+	$lblGroup = New-Object System.Windows.Forms.Label #20141120
+	$lblGroups = New-Object System.Windows.Forms.Label #20141114
+	$clbGroups = New-Object System.Windows.Forms.CheckedListBox #20141114
+	$lblLists = New-Object System.Windows.Forms.Label #20141114
+	$clbLists = New-Object System.Windows.Forms.CheckedListBox #20141114
+	$lblCombo = New-Object System.Windows.Forms.Label #20141120
+	$clbCombo = New-Object System.Windows.Forms.CheckedListBox #20141120
+
 	$txtUPN = New-Object System.Windows.Forms.TextBox
+	$lblUserPrincipalName = New-Object System.Windows.Forms.Label
+
 	$txtsAM = New-Object System.Windows.Forms.TextBox
+	$lblSamAccountName = New-Object System.Windows.Forms.Label
+
 	$txtDN = New-Object System.Windows.Forms.TextBox
-	$cboDepartment = New-Object System.Windows.Forms.ComboBox
-	$labelUserPrincipalName = New-Object System.Windows.Forms.Label
-	$labelSamAccountName = New-Object System.Windows.Forms.Label
-	$labelDisplayName = New-Object System.Windows.Forms.Label
-	$SB = New-Object System.Windows.Forms.StatusBar
+	$lblDisplayName = New-Object System.Windows.Forms.Label
+
 	$cboSite = New-Object System.Windows.Forms.ComboBox
-	$labelSite = New-Object System.Windows.Forms.Label
+	$lblSite = New-Object System.Windows.Forms.Label
+
 	$cboDescription = New-Object System.Windows.Forms.ComboBox
+	$lblDescription = New-Object System.Windows.Forms.Label
+
 	$txtPassword = New-Object System.Windows.Forms.TextBox
-	$labelPassword = New-Object System.Windows.Forms.Label
+	$lblPassword = New-Object System.Windows.Forms.Label
+
 	$cboDomain = New-Object System.Windows.Forms.ComboBox
-	$labelCurrentDomain = New-Object System.Windows.Forms.Label
-	$txtPostalCode = New-Object System.Windows.Forms.TextBox
-	$txtState = New-Object System.Windows.Forms.TextBox
-	$txtCity = New-Object System.Windows.Forms.TextBox
-	$txtStreetAddress = New-Object System.Windows.Forms.TextBox
-	$txtOffice = New-Object System.Windows.Forms.TextBox
-	$txtCompany = New-Object System.Windows.Forms.TextBox
-	$txtTitle = New-Object System.Windows.Forms.TextBox
+	$lblCurrentDomain = New-Object System.Windows.Forms.Label
+
 	$txtOfficePhone = New-Object System.Windows.Forms.TextBox
+	$lblOfficePhone = New-Object System.Windows.Forms.Label
+
+	$txtFax = New-Object System.Windows.Forms.TextBox
+	$lblFax = New-Object System.Windows.Forms.Label
+
+	$txtMobilePhone = New-Object System.Windows.Forms.TextBox
+	$lblMobilePhone = New-Object System.Windows.Forms.Label
+
 	$txtLastName = New-Object System.Windows.Forms.TextBox
+	$lblLastName = New-Object System.Windows.Forms.Label
+
 	$cboPath = New-Object System.Windows.Forms.ComboBox
-	$labelOU = New-Object System.Windows.Forms.Label
+	$lblOU = New-Object System.Windows.Forms.Label
+
 	$txtFirstName = New-Object System.Windows.Forms.TextBox
-	$labelPostalCode = New-Object System.Windows.Forms.Label
-	$labelState = New-Object System.Windows.Forms.Label
-	$labelCity = New-Object System.Windows.Forms.Label
-	$labelStreetAddress = New-Object System.Windows.Forms.Label
-	$labelOffice = New-Object System.Windows.Forms.Label
-	$labelCompany = New-Object System.Windows.Forms.Label
-	$labelDepartment = New-Object System.Windows.Forms.Label
-	$labelTitle = New-Object System.Windows.Forms.Label
+	$lblFirstName = New-Object System.Windows.Forms.Label
+
+	$txtPostalCode = New-Object System.Windows.Forms.TextBox
+	$lblPostalCode = New-Object System.Windows.Forms.Label
+	
+	$txtState = New-Object System.Windows.Forms.TextBox
+	$lblState = New-Object System.Windows.Forms.Label
+	
+	$txtCity = New-Object System.Windows.Forms.TextBox
+	$lblCity = New-Object System.Windows.Forms.Label
+	
+	$txtStreetAddress = New-Object System.Windows.Forms.TextBox
+	$lblStreetAddress = New-Object System.Windows.Forms.Label
+	
+	$txtOffice = New-Object System.Windows.Forms.TextBox
+	$lblOffice = New-Object System.Windows.Forms.Label
+	
+	$txtCompany = New-Object System.Windows.Forms.TextBox
+	$lblCompany = New-Object System.Windows.Forms.Label
+	
+	$cboDepartment = New-Object System.Windows.Forms.ComboBox
+	$lblDepartment = New-Object System.Windows.Forms.Label
+
+	$cboTitle = New-Object System.Windows.Forms.ComboBox
+	$lblTitle = New-Object System.Windows.Forms.Label
+
+	$SB = New-Object System.Windows.Forms.StatusBar
 	$btnSubmit = New-Object System.Windows.Forms.Button
-	$labelDescription = New-Object System.Windows.Forms.Label
-	$labelOfficePhone = New-Object System.Windows.Forms.Label
-	$labelLastName = New-Object System.Windows.Forms.Label
-	$labelFirstName = New-Object System.Windows.Forms.Label
+	$System_Windows_Forms_MenuStrip_1 = New-Object System.Windows.Forms.MenuStrip
 	$menustrip1 = New-Object System.Windows.Forms.MenuStrip
 	$fileToolStripMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
 	$formMode = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -265,12 +357,9 @@ function Call-ANUC_pff {
 	$MenuExit = New-Object System.Windows.Forms.ToolStripMenuItem
 	$InitialFormWindowState = New-Object System.Windows.Forms.FormWindowState
 	#endregion Generated Form Objects
-
 	#----------------------------------------------
-	# User Generated Script
+	#region Generate form action functions
 	#----------------------------------------------
-	
-	
 	
 	$formMain_Load={
 		
@@ -285,11 +374,26 @@ function Call-ANUC_pff {
 		Write-Verbose "Adding descriptions to combo box"
 		$XML.Options.Descriptions.Description | %{$cboDescription.Items.Add($_)}
 		
+		Write-Verbose "Adding titles to combo box"
+		$XML.Options.JobTitles.JobTitle | %{$cboTitle.Items.Add($_)}
+		
 		Write-Verbose "Adding sites to combo box"
 		$XML.Options.Locations.Location | %{$cboSite.Items.Add($_.Site)}
 		
 		Write-Verbose "Adding departments to combo box"
 		$XML.Options.Departments.Department | %{$cboDepartment.Items.Add($_)}
+		
+		Write-Verbose "Adding groups to combo box"
+		$XML.Options.Groups.Group | %{$cboGroup.Items.Add($_.Name)} #20141120
+
+		Write-Verbose "Adding groups to checked list box"
+		$XML.Options.SecurityGroups.SecurityGroup | %{$clbGroups.Items.Add($_)} #20141114
+		
+		Write-Verbose "Adding lists to checked list box"
+		$XML.Options.DistributionLists.DistributionList | %{$clbLists.Items.Add($_)} #20141114
+		
+		Write-Verbose "Adding combo to checked list box"
+		$XML.Options.ComboGroups.ComboGroup | %{$clbCombo.Items.Add($_)} #20141120
 		
 		Write-Verbose "Setting default fields"
 		$cboDomain.SelectedItem = $XML.Options.Default.Domain
@@ -297,32 +401,37 @@ function Call-ANUC_pff {
 		$txtFirstName.Text = $XML.Options.Default.FirstName
 		$txtLastName.Text = $XML.Options.Default.LastName
 		$txtOffice.Text = $XML.Options.Default.Office
-		$txtTitle.Text = $XML.Options.Default.Title
+		$cboTitle.SelectedItem = $XML.Options.Default.Title
 		$cboDescription.SelectedItem = $XML.Options.Default.Description
 		$cboDepartment.SelectedItem = $XML.Options.Default.Department
 		$txtCompany.Text = $XML.Options.Default.Company
-		$txtOfficePhone.Text = $XML.Options.Default.Phone
 		$cboSite.SelectedItem = $XML.Options.Default.Site
-		$txtStreetAddress.Text = $XML.Options.Default.StreetAddress
-		$txtCity.Text = $XML.Options.Default.City
-		$txtState.Text = $XML.Options.Default.State
-		$txtPostalCode.Text = $XML.Options.Default.PostalCode
+		#$txtStreetAddress.Text = $XML.Options.Default.StreetAddress
+		#$txtCity.Text = $XML.Options.Default.City
+		#$txtState.Text = $XML.Options.Default.State
+		#$txtPostalCode.Text = $XML.Options.Default.PostalCode
+		#$txtOfficePhone.Text = $XML.Options.Default.Phone
+		#$txtFax.Text = $XML.Options.Default.Fax
 		$txtPassword.Text = $XML.Options.Default.Password
-		
+		$cboGroup.SelectedItem = $XML.Options.Default.Group #20141120
+
 		Write-Verbose "Creating CSV Headers"
-		$Headers = @('ID','Domain','Path','FirstName','LastName','Office','Title','Description','Department','Company','Phone','StreetAddress','City','State','PostalCode','Password','sAMAccountName','userPrincipalName','DisplayName')
+		$Headers = @('ID','Domain','Path','FirstName','LastName','Office','Title','Description','Department','Company','Phone','Fax','Mobile','StreetAddress','City','State','PostalCode','Password','sAMAccountName','userPrincipalName','DisplayName')
 		$Headers| %{[Void]$lvCSV.Columns.Add($_)}
 	}
 	
 	$btnSubmit_Click={
 		
+		# Load properties from the form
 		$Domain=$cboDomain.Text
 		$Path=$cboPath.Text
 		$GivenName = $txtFirstName.Text
 		$Surname = $txtLastName.Text
 		$OfficePhone = $txtOfficePhone.Text
+		$Fax = $txtFax.Text
+		$MobilePhone = $txtMobilePhone.Text
 		$Description = $cboDescription.Text
-		$Title = $txtTitle.Text
+		$Title = $cboTitle.Text
 		$Department = $cboDepartment.Text
 		$Company = $txtCompany.Text
 		$Office = $txtOffice.Text
@@ -330,7 +439,13 @@ function Call-ANUC_pff {
 		$City = $txtCity.Text
 		$State = $txtState.Text
 		$PostalCode = $txtPostalCode.Text
+		$Country = $XML.Options.Default.Country #20141120
+		$AccountPassword = $txtPassword.text | ConvertTo-SecureString -AsPlainText -Force
+		$UserGroups = $clbGroups.CheckedItems #20141114
+		$UserLists = $clbLists.CheckedItems #20141114
+		$UserCombo = $clbCombo.CheckedItems #20141120
 	
+		# Load default read-only properties from the XML
 		if($XML.Options.Settings.Password.ChangeAtLogon -eq "True"){$ChangePasswordAtLogon = $True}
         else{$ChangePasswordAtLogon = $false}
 		
@@ -340,7 +455,7 @@ function Call-ANUC_pff {
 		$Name="$GivenName $Surname"
 		
         if($XML.Options.Settings.sAMAccountName.Generate -eq $True){$sAMAccountName = Set-sAMAccountName}
-		else{$sAMAccountName = $txtsAM.Text}
+				else{$sAMAccountName = $txtsAM.Text}
 
         if($XML.Options.Settings.uPN.Generate -eq $True){$userPrincipalName = Set-UPN}
         else{$userPrincipalName = $txtuPN.Text}
@@ -348,7 +463,13 @@ function Call-ANUC_pff {
         if($XML.Options.Settings.DisplayName.Generate -eq $True){$DisplayName = Set-DisplayName}
         else{$DisplayName = $txtDN.Text}
 
-		$AccountPassword = $txtPassword.text | ConvertTo-SecureString -AsPlainText -Force
+		$DomainController = $XML.Options.Settings.DomainController #20141117
+		$DomainNS = $XML.Options.Settings.DomainNS
+		$HomePage = $XML.Options.Settings.HomePage
+		$ScriptPath = $XML.Options.Settings.ScriptPath
+		$UserDirectory = $XML.Options.Settings.UserDirectory
+		$HomeDirectory = $UserDirectory+$samAccountName
+		$HomeDrive = $XML.Options.Settings.HomeDrive
 	
 		$User = @{
 		    Name = $Name
@@ -362,6 +483,8 @@ function Call-ANUC_pff {
 		    ChangePasswordAtLogon = $ChangePasswordAtLogon
 		    Enabled = $Enabled
 		    OfficePhone = $OfficePhone
+				Fax = $Fax
+		    Mobile = $MobilePhone
 		    Description = $Description
 		    Title = $Title
 		    Department = $Department
@@ -371,12 +494,44 @@ function Call-ANUC_pff {
 		    City = $City
 		    State = $State
 		    PostalCode = $PostalCode
+				Country = $Country
+				HomePage = $HomePage
+				ScriptPath = $ScriptPath
+				HomeDirectory = $HomeDirectory
+				HomeDrive = $HomeDrive
 		    }
+
+		#create new user account
 		$SB.Text = "Creating new user $sAMAccountName"
-        $ADError = $Null
+		$ADError = $Null
 		New-ADUser @User -ErrorVariable ADError
-        if ($ADerror){$SB.Text = "[$sAMAccountName] $ADError"}
-        else{$SB.Text = "$sAMAccountName created successfully."}
+		if ($ADerror){$SB.Text = "[$sAMAccountName] $ADError"}
+		else{$SB.Text = "$sAMAccountName created successfully."}
+
+		#create user folder and set permissions
+		$SB.Text = "Creating user folder and setting permissions"
+		New-Item -path $UserDirectory -name $sAMAccountName -type directory
+		$ACL = Get-Acl $HomeDirectory
+		$Ar = New-Object System.Security.AccessControl.FileSystemAccessRule($userPrincipalName, "FullControl", "ContainerInherit, ObjectInherit", "None", "Allow")
+		$ACL.AddAccessRule($Ar)
+		Set-Acl $HomeDirectory $Acl
+
+		#Add user to Security Groups
+		$SB.Text = "Add user to Security Groups"
+		$UserGroups | Add-ADGroupMember –Member $sAMAccountName #20141114
+
+		#Add user to Distribution Lists
+		$SB.Text = "Add user to Distribution Groups"
+		$UserLists | Add-DistributionGroupMember -Member $sAMAccountName -BypassSecurityGroupManagerCheck #20141114
+		
+		#Add user to Combo Groups
+		$SB.Text = "Add user to Combo Groups"
+		$UserCombo | Add-ADGroupMember –Member $sAMAccountName #20141120
+		
+		#Mail Enable new user
+		$SB.Text = "Mail Enable new user"
+		Enable-Mailbox $userPrincipalName -DomainController $DomainController #20141117
+		$SB.Text = "Done."
 	}
 	
 	$cboDomain_SelectedIndexChanged={
@@ -387,7 +542,7 @@ function Call-ANUC_pff {
 		
         if ($XML.Options.Settings.DisplayName.Generate) {$txtDN.Text = Set-DisplayName}
         if ($XML.Options.Settings.sAMAccountName.Generate) {$txtsAM.Text = Set-sAMAccountName}
-        if ($XML.Options.Settings.UPN.Generate) {$txtUPN.Text = Set-UPN}	
+        if ($XML.Options.Settings.UPN.Generate) {$txtUPN.Text = Set-UPN}
 	}
 	
 	$cboSite_SelectedIndexChanged={
@@ -397,6 +552,20 @@ function Call-ANUC_pff {
 		$txtCity.Text = $Site.City
 		$txtState.Text = $Site.State
 		$txtPostalCode.Text = $Site.PostalCode
+		$txtOfficePhone.Text = $Site.Phone #20141120
+		$txtFax.Text = $Site.Fax #20141120
+	}
+	
+	$cboGroup_SelectedIndexChanged={ #20141120
+		Write-Verbose "Updating groups fields with list information"
+	    $Group = @($XML.Options.Groups.Group | ? {$_.Name -match $cboGroup.Text}) #20141120
+		$arrayGroups = @($Group | % { $_.List } | ? { $_.Type -match "SecurityGroup" } | % { $_.'#text' } ) #20141120
+		#$arrayGroups = @($GroupLists | % { $_.'#text' } ) #20141120
+		for ($i = 0; $i -lt $clbGroups.Items.Count; $i++) { if($arrayGroups -Contains $clbGroups.Items[$i]){ $clbGroups.SetItemChecked( $i, $true ) } else { $clbGroups.SetItemChecked( $i, $false ) } } #20141114
+		$arrayLists = @($Group | % { $_.List } | ? { $_.Type -match "DistributionList" } | % { $_.'#text' } ) #20141120
+		for ($i = 0; $i -lt $clbLists.Items.Count; $i++) { if($arrayLists -Contains $clbLists.Items[$i]) { $clbLists.SetItemChecked( $i, $true ) } else { $clbLists.SetItemChecked( $i, $false ) } } #20141114
+		$arrayCombo = @($Group | % { $_.List } | ? { $_.Type -match "ComboGroup" } | % { $_.'#text' } ) #20141120
+		for ($i = 0; $i -lt $clbCombo.Items.Count; $i++) { if($arrayCombo -Contains $clbCombo.Items[$i]) { $clbCombo.SetItemChecked( $i, $true ) } else { $clbCombo.SetItemChecked( $i, $false ) } } #20141120
 	}
 	
 	$txtName_TextChanged={
@@ -423,7 +592,7 @@ function Call-ANUC_pff {
 			Get-Variable | ?{$_.Name -match "txt"} | %{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
 			Get-Variable | ?{$_.Name -match "cbo"} | %{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
 			Get-Variable | ?{$_.Name -match "btn"} | %{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
-			$formMain.Size = '1484,635'
+			$formMain.Size = '1724,670'
 			$btnFirst.Visible = $True
 			$btnPrev.Visible = $True
 			$btnNext.Visible = $True
@@ -432,16 +601,19 @@ function Call-ANUC_pff {
 			$btnSubmitAll.Visible = $True
 			$lvCSV.Visible = $True
 			$cboDomain.Width = '175'
-		    $cboPath.Width = '249'
+			$cboPath.Width = '249'
 			$txtFirstName.Width = '175'
 			$txtLastName.Width = '175'
 			$txtOffice.Width = '175'
-			$txtTitle.Width = '175'
+			$cboTitle.Width = '175'
 			$cboDescription.Width = '175'
 			$cboDepartment.Width = '175'
 			$txtCompany.Width = '175'
 			$txtOfficePhone.Width = '175'
+			$txtMobilePhone.Width = '175'
+			$txtFax.Width = '175'
 			$cboSite.Width = '175'
+			$cboGroup.Width = '100'
 			$txtStreetAddress.Width = '175'
 			$txtCity.Width = '175'
 			$txtState.Width = '175'
@@ -453,7 +625,7 @@ function Call-ANUC_pff {
 			}
 		else{
 			$formMode.Text = "CSV Mode"
-			$formMain.Size = '320,635'
+			$formMain.Size = '560,670'
 			Get-Variable | ?{$_.Name -match "txt"} | %{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
 			Get-Variable | ?{$_.Name -match "cbo"} | %{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
 			Get-Variable | ?{$_.Name -match "btn"} | %{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
@@ -495,11 +667,13 @@ function Call-ANUC_pff {
 		try{$txtFirstName.Text = $lvCSV.SelectedItems[0].SubItems[3].Text}catch{}
 		try{$txtLastName.Text = $lvCSV.SelectedItems[0].SubItems[4].Text}catch{}
 		try{$txtOffice.Text = $lvCSV.SelectedItems[0].SubItems[5].Text}catch{}
-		try{$txtTitle.Text = $lvCSV.SelectedItems[0].SubItems[6].Text}catch{}
+		try{$cboTitle.SelectedItem = $lvCSV.SelectedItems[0].SubItems[6].Text}catch{}
 		try{$cboDescription.SelectedItem = $lvCSV.SelectedItems[0].SubItems[7].Text}catch{}
 		try{$cboDepartment.SelectedItem = $lvCSV.SelectedItems[0].SubItems[8].Text}catch{}
 		try{$txtCompany.Text = $lvCSV.SelectedItems[0].SubItems[9].Text}catch{}
 		try{$txtOfficePhone.Text = $lvCSV.SelectedItems[0].SubItems[10].Text}catch{}
+		try{$txtFax.Text = $lvCSV.SelectedItems[0].SubItems[21].Text}catch{}
+		try{$txtMobilePhone.Text = $lvCSV.SelectedItems[0].SubItems[20].Text}catch{}
 		try{$txtStreetAddress.Text = $lvCSV.SelectedItems[0].SubItems[11].Text}catch{}
 		try{$txtCity.Text = $lvCSV.SelectedItems[0].SubItems[12].Text}catch{}
 		try{$txtState.Text = $lvCSV.SelectedItems[0].SubItems[13].Text}catch{}
@@ -512,13 +686,13 @@ function Call-ANUC_pff {
 	
 	$btnFirst_Click={
 		$lvCSV.Items | %{$_.Selected = $False}
-		$lvCSV.Items[0].Selected = $True	
+		$lvCSV.Items[0].Selected = $True
 	}
 	
 	$btnLast_Click={
 		$LastRow = ($lvCSV.Items).Count - 1
 		$lvCSV.Items | %{$_.Selected = $False}
-		$lvCSV.Items[$LastRow].Selected = $True	
+		$lvCSV.Items[$LastRow].Selected = $True
 	}
 	
 	$btnNext_Click={
@@ -526,7 +700,7 @@ function Call-ANUC_pff {
 		[Int]$Index = $lvCSV.SelectedItems[0].Index
 		if($LastRow -gt $Index){
 			$lvCSV.Items | %{$_.Selected = $False}
-			$lvCSV.Items[$Index+1].Selected = $True	
+			$lvCSV.Items[$Index+1].Selected = $True
 		}
 	}
 	
@@ -534,7 +708,7 @@ function Call-ANUC_pff {
 		[Int]$Index = $lvCSV.SelectedItems[0].Index
 		if($Index -gt 0){
 			$lvCSV.Items | %{$_.Selected = $False}
-			$lvCSV.Items[$Index-1].Selected = $True	
+			$lvCSV.Items[$Index-1].Selected = $True
 		}
 	}
 	
@@ -549,16 +723,18 @@ function Call-ANUC_pff {
 			$Path = $_.Subitems[2].Text
 			$GivenName = $_.Subitems[3].Text
 			$Surname = $_.Subitems[4].Text
-			$OfficePhone = $_.Subitems[5].Text
+			$Office = $_.Subitems[5].Text
 			$Title = $_.Subitems[6].Text
 			$Description = $_.Subitems[7].Text
 			$Department = $_.Subitems[8].Text
 			$Company = $_.Subitems[9].Text
-			$Office = $_.Subitems[10].Text
+			$OfficePhone = $_.Subitems[10].Text
 			$StreetAddress = $_.Subitems[11].Text
 			$City = $_.Subitems[12].Text
 			$State = $_.Subitems[13].Text
 			$PostalCode = $_.Subitems[14].Text
+			$MobilePhone = $_.Subitems[20].Text
+			$Fax = $_.Subitems[21].Text
 	
 			$Name = "$GivenName $Surname"
 
@@ -578,7 +754,15 @@ function Call-ANUC_pff {
             else{$DisplayName = $_.Subitems[18].Text}
 
 			$AccountPassword = $_.Subitems[15].Text | ConvertTo-SecureString -AsPlainText -Force
-	
+			$DomainController = $XML.Options.Settings.DomainController #20141117
+			$DomainNS = $XML.Options.Settings.DomainNS
+			$HomePage = $XML.Options.Settings.HomePage
+			$ScriptPath = $XML.Options.Settings.ScriptPath
+			$UserDirectory = $XML.Options.Settings.UserDirectory
+			$HomeDirectory = $UserDirectory+$samAccountName
+			$HomeDrive = $XML.Options.Settings.HomeDrive
+			$Country = $XML.Options.Default.Country
+
 			$User = @{
 			    Name = $Name
 			    GivenName = $GivenName
@@ -591,6 +775,8 @@ function Call-ANUC_pff {
 			    ChangePasswordAtLogon = $ChangePasswordAtLogon
 			    Enabled = $Enabled
 			    OfficePhone = $OfficePhone
+                Fax = $Fax
+			    Mobile = $MobilePhone
 			    Description = $Description
 			    Title = $Title
 			    Department = $Department
@@ -600,17 +786,35 @@ function Call-ANUC_pff {
 			    City = $City
 			    State = $State
 			    PostalCode = $PostalCode
+				Country = $Country
+				HomePage = $HomePage
+				ScriptPath = $ScriptPath
+				HomeDirectory = $HomeDirectory
+				HomeDrive = $HomeDrive
 			    }
+			#create new user account
 			$SB.Text = "Creating new user $sAMAccountName"
             $ADError = $Null
 			New-ADUser @User -ErrorVariable ADError
             if ($ADerror){$SB.Text = "[$sAMAccountName] $ADError"}
             else{$SB.Text = "$sAMAccountName created successfully."}
+			
+			#create user folder and set permissions
+			$SB.Text = "Creating user folder and setting permissions"
+			New-Item -path $UserDirectory -name $sAMAccountName -type directory
+			$DomainUser = $DomainNS + '\' + $sAMAccountName
+			$ACL = Get-acl $HomeDirectory
+			$Ar = New-Object System.Security.AccessControl.FileSystemAccessRule($userPrincipalName, "FullControl", "ContainerInherit, ObjectInherit", "None", "Allow")
+			$Acl.SetAccessRule($Ar)
+			Set-Acl $HomeDirectory $Acl
+			
+			#Mail Enable new user
+			$SB.Text = "Mail Enable new user"
+			Enable-Mailbox $userPrincipalName -DomainController $DomainController #20141117
+			$SB.Text = "Done."
 		}
 	}
-	
-	
-	# --End User Generated Script--
+	#endregion Generate form action functions
 	#----------------------------------------------
 	#region Generated Events
 	#----------------------------------------------
@@ -634,6 +838,7 @@ function Call-ANUC_pff {
 			$btnImportCSV.remove_Click($btnImportCSV_Click)
 			$lvCSV.remove_SelectedIndexChanged($lvCSV_SelectedIndexChanged)
 			$cboSite.remove_SelectedIndexChanged($cboSite_SelectedIndexChanged)
+			$cboGroup.remove_SelectedIndexChanged($cboGroup_SelectedIndexChanged) #20141120
 			$cboDomain.remove_SelectedIndexChanged($cboDomain_SelectedIndexChanged)
 			$txtLastName.remove_TextChanged($txtName_TextChanged)
 			$txtFirstName.remove_TextChanged($txtName_TextChanged)
@@ -650,10 +855,10 @@ function Call-ANUC_pff {
 		{ }
 	}
 	#endregion Generated Events
-
 	#----------------------------------------------
 	#region Generated Form Code
 	#----------------------------------------------
+
 	#
 	# formMain
 	#
@@ -664,65 +869,557 @@ function Call-ANUC_pff {
 	$formMain.Controls.Add($btnFirst)
 	$formMain.Controls.Add($btnImportCSV)
 	$formMain.Controls.Add($lvCSV)
+	$formMain.Controls.Add($cboGroup) #20141120
+	$formMain.Controls.Add($lblGroup) #20141120
+	$formMain.Controls.Add($lblGroups) #20141114
+	$formMain.Controls.Add($clbGroups) #20141114
+	$formMain.Controls.Add($lblLists) #20141114
+	$formMain.Controls.Add($clbLists) #20141114
+	$formMain.Controls.Add($lblCombo) #20141120
+	$formMain.Controls.Add($clbCombo) #20141120
 	$formMain.Controls.Add($txtUPN)
 	$formMain.Controls.Add($txtsAM)
 	$formMain.Controls.Add($txtDN)
 	$formMain.Controls.Add($cboDepartment)
-	$formMain.Controls.Add($labelUserPrincipalName)
-	$formMain.Controls.Add($labelSamAccountName)
-	$formMain.Controls.Add($labelDisplayName)
+	$formMain.Controls.Add($lblUserPrincipalName)
+	$formMain.Controls.Add($lblSamAccountName)
+	$formMain.Controls.Add($lblDisplayName)
 	$formMain.Controls.Add($SB)
 	$formMain.Controls.Add($cboSite)
-	$formMain.Controls.Add($labelSite)
+	$formMain.Controls.Add($lblSite)
 	$formMain.Controls.Add($cboDescription)
 	$formMain.Controls.Add($txtPassword)
-	$formMain.Controls.Add($labelPassword)
+	$formMain.Controls.Add($lblPassword)
 	$formMain.Controls.Add($cboDomain)
-	$formMain.Controls.Add($labelCurrentDomain)
+	$formMain.Controls.Add($lblCurrentDomain)
 	$formMain.Controls.Add($txtPostalCode)
 	$formMain.Controls.Add($txtState)
 	$formMain.Controls.Add($txtCity)
 	$formMain.Controls.Add($txtStreetAddress)
 	$formMain.Controls.Add($txtOffice)
 	$formMain.Controls.Add($txtCompany)
-	$formMain.Controls.Add($txtTitle)
+	$formMain.Controls.Add($cboTitle)
 	$formMain.Controls.Add($txtOfficePhone)
+	$formMain.Controls.Add($txtFax)
+	$formMain.Controls.Add($txtMobilePhone)
 	$formMain.Controls.Add($txtLastName)
 	$formMain.Controls.Add($cboPath)
-	$formMain.Controls.Add($labelOU)
+	$formMain.Controls.Add($lblOU)
 	$formMain.Controls.Add($txtFirstName)
-	$formMain.Controls.Add($labelPostalCode)
-	$formMain.Controls.Add($labelState)
-	$formMain.Controls.Add($labelCity)
-	$formMain.Controls.Add($labelStreetAddress)
-	$formMain.Controls.Add($labelOffice)
-	$formMain.Controls.Add($labelCompany)
-	$formMain.Controls.Add($labelDepartment)
-	$formMain.Controls.Add($labelTitle)
+	$formMain.Controls.Add($lblPostalCode)
+	$formMain.Controls.Add($lblState)
+	$formMain.Controls.Add($lblCity)
+	$formMain.Controls.Add($lblStreetAddress)
+	$formMain.Controls.Add($lblOffice)
+	$formMain.Controls.Add($lblCompany)
+	$formMain.Controls.Add($lblDepartment)
+	$formMain.Controls.Add($lblTitle)
 	$formMain.Controls.Add($btnSubmit)
-	$formMain.Controls.Add($labelDescription)
-	$formMain.Controls.Add($labelOfficePhone)
-	$formMain.Controls.Add($labelLastName)
-	$formMain.Controls.Add($labelFirstName)
+	$formMain.Controls.Add($lblDescription)
+	$formMain.Controls.Add($lblOfficePhone)
+	$formMain.Controls.Add($lblFax)
+	$formMain.Controls.Add($lblMobilePhone)
+	$formMain.Controls.Add($lblLastName)
+	$formMain.Controls.Add($lblFirstName)
 	$formMain.Controls.Add($menustrip1)
+
 	$formMain.AcceptButton = $btnSubmit
-	$formMain.ClientSize = '304, 597'
-	$System_Windows_Forms_MenuStrip_1 = New-Object System.Windows.Forms.MenuStrip
+	$formMain.ClientSize = '544, 635' #subtract 16,35 pts for borders
+	$formMain.MainMenuStrip = $System_Windows_Forms_MenuStrip_1
+	$formMain.Name = "formMain"
+	$formMain.ShowIcon = $False
+	$formMain.StartPosition = 'CenterScreen'
+	$formMain.Text = $XML.Options.Product #20141117
+	$formMain.add_Load($formMain_Load)
+
 	$System_Windows_Forms_MenuStrip_1.Location = '0, 0'
 	$System_Windows_Forms_MenuStrip_1.Name = ""
 	$System_Windows_Forms_MenuStrip_1.Size = '271, 24'
 	$System_Windows_Forms_MenuStrip_1.TabIndex = 1
 	$System_Windows_Forms_MenuStrip_1.Visible = $False
-	$formMain.MainMenuStrip = $System_Windows_Forms_MenuStrip_1
-	$formMain.Name = "formMain"
-	$formMain.ShowIcon = $False
-	$formMain.StartPosition = 'CenterScreen'
-	$formMain.Text = "Arposh New User Creation"
-	$formMain.add_Load($formMain_Load)
+	#
+	# lblCurrentDomain
+	#
+	$lblCurrentDomain.Location = '10, 35'
+	$lblCurrentDomain.Name = "lblCurrentDomain"
+	$lblCurrentDomain.Size = '100, 23'
+	$lblCurrentDomain.TabIndex = 39
+	$lblCurrentDomain.Text = "Current Domain"
+	$lblCurrentDomain.TextAlign = 'MiddleLeft'
+	#
+	# cboDomain
+	#
+	$cboDomain.Anchor = 'Top, Left, Right'
+	$cboDomain.FormattingEnabled = $True
+	$cboDomain.Location = '118, 35'
+	$cboDomain.Name = "cboDomain"
+	$cboDomain.Size = '173, 21'
+	$cboDomain.TabIndex = 1
+	$cboDomain.add_SelectedIndexChanged($cboDomain_SelectedIndexChanged)
+	$cboDomain.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+	#
+	# lblOU
+	#
+	$lblOU.Location = '10, 65'
+	$lblOU.Name = "lblOU"
+	$lblOU.Size = '36, 23'
+	$lblOU.TabIndex = 26
+	$lblOU.Text = "OU"
+	$lblOU.TextAlign = 'MiddleLeft'
+	#
+	# cboPath
+	#
+	$cboPath.Anchor = 'Top, Left, Right'
+	$cboPath.FormattingEnabled = $True
+	$cboPath.Location = '45, 65'
+	$cboPath.Name = "cboPath"
+	$cboPath.Size = '247, 21'
+	$cboPath.TabIndex = 2
+
+
+
+	#
+	# lblFirstName
+	#
+	$lblFirstName.Location = '10, 110'
+	$lblFirstName.Name = "lblFirstName"
+	$lblFirstName.Size = '100, 23'
+	$lblFirstName.TabIndex = 12
+	$lblFirstName.Text = "First Name"
+	$lblFirstName.TextAlign = 'MiddleLeft'
+	#
+	# txtFirstName
+	#
+	$txtFirstName.Anchor = 'Top, Left, Right'
+	$txtFirstName.Location = '118, 110'
+	$txtFirstName.Name = "txtFirstName"
+	$txtFirstName.Size = '173, 20'
+	$txtFirstName.TabIndex = 3
+	$txtFirstName.add_TextChanged($txtName_TextChanged)
+	#
+	# lblLastName
+	#
+	$lblLastName.Location = '10, 135'
+	$lblLastName.Name = "lblLastName"
+	$lblLastName.Size = '100, 23'
+	$lblLastName.TabIndex = 13
+	$lblLastName.Text = "Last Name"
+	$lblLastName.TextAlign = 'MiddleLeft'
+	#
+	# txtLastName
+	#
+	$txtLastName.Anchor = 'Top, Left, Right'
+	$txtLastName.Location = '118, 135'
+	$txtLastName.Name = "txtLastName"
+	$txtLastName.Size = '173, 20'
+	$txtLastName.TabIndex = 4
+	$txtLastName.add_TextChanged($txtName_TextChanged)
+	#
+	# lblOffice
+	#
+	$lblOffice.Location = '10, 160'
+	$lblOffice.Name = "lblOffice"
+	$lblOffice.Size = '100, 23'
+	$lblOffice.TabIndex = 20
+	$lblOffice.Text = "Office"
+	$lblOffice.TextAlign = 'MiddleLeft'
+	#
+	# txtOffice
+	#
+	$txtOffice.Anchor = 'Top, Left, Right'
+	$txtOffice.Location = '118, 160'
+	$txtOffice.Name = "txtOffice"
+	$txtOffice.Size = '173, 20'
+	$txtOffice.TabIndex = 5
+	#
+	# lblTitle
+	#
+	$lblTitle.Location = '10, 185'
+	$lblTitle.Name = "lblTitle"
+	$lblTitle.Size = '100, 23'
+	$lblTitle.TabIndex = 17
+	$lblTitle.Text = "Title"
+	$lblTitle.TextAlign = 'MiddleLeft'
+	#
+	# cboTitle
+	#
+	$cboTitle.Anchor = 'Top, Left, Right'
+	$cboTitle.FormattingEnabled = $True
+	$cboTitle.Location = '118, 185'
+	$cboTitle.Name = "cboTitle"
+	$cboTitle.Size = '173, 20'
+	$cboTitle.TabIndex = 6
+	#
+	# lblDescription
+	#
+	$lblDescription.Location = '10, 210'
+	$lblDescription.Name = "lblDescription"
+	$lblDescription.Size = '100, 23'
+	$lblDescription.TabIndex = 15
+	$lblDescription.Text = "Description"
+	$lblDescription.TextAlign = 'MiddleLeft'
+	#
+	# cboDescription
+	#
+	$cboDescription.Anchor = 'Top, Left, Right'
+	$cboDescription.FormattingEnabled = $True
+	$cboDescription.Location = '118, 210'
+	$cboDescription.Name = "cboDescription"
+	$cboDescription.Size = '173, 21'
+	$cboDescription.TabIndex = 7
+	#
+	# lblDepartment
+	#
+	$lblDepartment.Location = '10, 235'
+	$lblDepartment.Name = "lblDepartment"
+	$lblDepartment.Size = '100, 23'
+	$lblDepartment.TabIndex = 18
+	$lblDepartment.Text = "Department"
+	$lblDepartment.TextAlign = 'MiddleLeft'
+	#
+	# cboDepartment
+	#
+	$cboDepartment.Anchor = 'Top, Left, Right'
+	$cboDepartment.FormattingEnabled = $True
+	$cboDepartment.Location = '118, 235'
+	$cboDepartment.Name = "cboDepartment"
+	$cboDepartment.Size = '173, 21'
+	$cboDepartment.TabIndex = 8
+	#
+	# lblCompany
+	#
+	$lblCompany.Location = '10, 260'
+	$lblCompany.Name = "lblCompany"
+	$lblCompany.Size = '100, 23'
+	$lblCompany.TabIndex = 19
+	$lblCompany.Text = "Company"
+	$lblCompany.TextAlign = 'MiddleLeft'
+	#
+	# txtCompany
+	#
+	$txtCompany.Anchor = 'Top, Left, Right'
+	$txtCompany.Location = '118, 260'
+	$txtCompany.Name = "txtCompany"
+	$txtCompany.Size = '173, 20'
+	$txtCompany.TabIndex = 9
+	#
+	# lblMobilePhone
+	#
+	$lblMobilePhone.Location = '10, 285'
+	$lblMobilePhone.Name = "lblMobilePhone"
+	$lblMobilePhone.Size = '100, 23'
+	$lblMobilePhone.TabIndex = 14
+	$lblMobilePhone.Text = "Mobile Phone"
+	$lblMobilePhone.TextAlign = 'MiddleLeft'
+	#
+	# txtMobilePhone
+	#
+	$txtMobilePhone.Anchor = 'Top, Left, Right'
+	$txtMobilePhone.Location = '118, 285'
+	$txtMobilePhone.Name = "txtMobilePhone"
+	$txtMobilePhone.Size = '173, 20'
+	$txtMobilePhone.TabIndex = 10
+
+
+
+	#
+	# lblSite
+	#
+	$lblSite.Location = '10, 320'
+	$lblSite.Name = "lblSite"
+	$lblSite.Size = '100, 23'
+	$lblSite.TabIndex = 44
+	$lblSite.Text = "Site"
+	$lblSite.TextAlign = 'MiddleLeft'
+	#
+	# cboSite
+	#
+	$cboSite.Anchor = 'Top, Left, Right'
+	$cboSite.FormattingEnabled = $True
+	$cboSite.Location = '118, 320'
+	$cboSite.Name = "cboSite"
+	$cboSite.Size = '173, 21'
+	$cboSite.TabIndex = 11
+	$cboSite.add_SelectedIndexChanged($cboSite_SelectedIndexChanged)
+	$cboSite.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+	#
+	# lblOfficePhone
+	#
+	$lblOfficePhone.Location = '10, 345'
+	$lblOfficePhone.Name = "lblOfficePhone"
+	$lblOfficePhone.Size = '100, 23'
+	$lblOfficePhone.TabIndex = 14
+	$lblOfficePhone.Text = "Office Phone"
+	$lblOfficePhone.TextAlign = 'MiddleLeft'
+	#
+	# txtOfficePhone
+	#
+	$txtOfficePhone.Anchor = 'Top, Left, Right'
+	$txtOfficePhone.Location = '118, 345'
+	$txtOfficePhone.Name = "txtOfficePhone"
+	$txtOfficePhone.Size = '173, 20'
+	$txtOfficePhone.TabIndex = 10
+	#
+	# lblFax
+	#
+	$lblFax.Location = '10, 370'
+	$lblFax.Name = "lblFax"
+	$lblFax.Size = '100, 23'
+	$lblFax.TabIndex = 14
+	$lblFax.Text = "Office Fax"
+	$lblFax.TextAlign = 'MiddleLeft'
+	#
+	# txtFax
+	#
+	$txtFax.Anchor = 'Top, Left, Right'
+	$txtFax.Location = '118, 370'
+	$txtFax.Name = "txtFax"
+	$txtFax.Size = '173, 20'
+	$txtFax.TabIndex = 10
+
+	
+	
+	
+	#
+	# lblStreetAddress
+	#
+	$lblStreetAddress.Location = '10, 395'
+	$lblStreetAddress.Name = "lblStreetAddress"
+	$lblStreetAddress.Size = '100, 23'
+	$lblStreetAddress.TabIndex = 21
+	$lblStreetAddress.Text = "Street Address"
+	$lblStreetAddress.TextAlign = 'MiddleLeft'
+	#
+	# txtStreetAddress
+	#
+	$txtStreetAddress.Anchor = 'Top, Left, Right'
+	$txtStreetAddress.Location = '118, 395'
+	$txtStreetAddress.Name = "txtStreetAddress"
+	$txtStreetAddress.Size = '173, 20'
+	$txtStreetAddress.TabIndex = 12
+	#
+	# lblCity
+	#
+	$lblCity.Location = '10, 420'
+	$lblCity.Name = "lblCity"
+	$lblCity.Size = '100, 23'
+	$lblCity.TabIndex = 22
+	$lblCity.Text = "City"
+	$lblCity.TextAlign = 'MiddleLeft'
+	#
+	# txtCity
+	#
+	$txtCity.Anchor = 'Top, Left, Right'
+	$txtCity.Location = '118, 420'
+	$txtCity.Name = "txtCity"
+	$txtCity.Size = '173, 20'
+	$txtCity.TabIndex = 13
+	#
+	# lblState
+	#
+	$lblState.Location = '10, 445'
+	$lblState.Name = "lblState"
+	$lblState.Size = '100, 23'
+	$lblState.TabIndex = 23
+	$lblState.Text = "State"
+	$lblState.TextAlign = 'MiddleLeft'
+	#
+	# txtState
+	#
+	$txtState.Anchor = 'Top, Left, Right'
+	$txtState.Location = '118, 445'
+	$txtState.Name = "txtState"
+	$txtState.Size = '173, 20'
+	$txtState.TabIndex = 14
+	#
+	# lblPostalCode
+	#
+	$lblPostalCode.Location = '10, 470'
+	$lblPostalCode.Name = "lblPostalCode"
+	$lblPostalCode.Size = '100, 23'
+	$lblPostalCode.TabIndex = 24
+	$lblPostalCode.Text = "Postal Code"
+	$lblPostalCode.TextAlign = 'MiddleLeft'
+	#
+	# txtPostalCode
+	#
+	$txtPostalCode.Anchor = 'Top, Left, Right'
+	$txtPostalCode.Location = '118, 470'
+	$txtPostalCode.Name = "txtPostalCode"
+	$txtPostalCode.Size = '173, 20'
+	$txtPostalCode.TabIndex = 15
+
+
+	#
+	# lblDisplayName
+	#
+	$lblDisplayName.Location = '10, 505'
+	$lblDisplayName.Name = "lblDisplayName"
+	$lblDisplayName.Size = '100, 23'
+	$lblDisplayName.TabIndex = 46
+	$lblDisplayName.Text = "Display Name"
+	$lblDisplayName.TextAlign = 'MiddleLeft'
+	#
+	# txtDN
+	#
+	$txtDN.Anchor = 'Top, Left, Right'
+	$txtDN.Location = '118, 505'
+	$txtDN.Name = "txtDN"
+	$txtDN.Size = '173, 20'
+	$txtDN.TabIndex = 49
+	#
+	# lblSamAccountName
+	#
+	$lblSamAccountName.Location = '10, 530'
+	$lblSamAccountName.Name = "lblSamAccountName"
+	$lblSamAccountName.Size = '100, 23'
+	$lblSamAccountName.TabIndex = 47
+	$lblSamAccountName.Text = "samAccountName"
+	$lblSamAccountName.TextAlign = 'MiddleLeft'
+	#
+	# txtsAM
+	#
+	$txtsAM.Anchor = 'Top, Left, Right'
+	$txtsAM.Location = '118, 530'
+	$txtsAM.Name = "txtsAM"
+	$txtsAM.Size = '173, 20'
+	$txtsAM.TabIndex = 50
+	#
+	# lblUserPrincipalName
+	#
+	$lblUserPrincipalName.Location = '10, 555'
+	$lblUserPrincipalName.Name = "lblUserPrincipalName"
+	$lblUserPrincipalName.Size = '100, 23'
+	$lblUserPrincipalName.TabIndex = 48
+	$lblUserPrincipalName.Text = "userPrincipalName"
+	$lblUserPrincipalName.TextAlign = 'MiddleLeft'
+	#
+	# txtUPN
+	#
+	$txtUPN.Anchor = 'Top, Left, Right'
+	$txtUPN.Location = '118, 555'
+	$txtUPN.Name = "txtUPN"
+	$txtUPN.Size = '173, 20'
+	$txtUPN.TabIndex = 51
+	#
+	# lblPassword
+	#
+	$lblPassword.Location = '10, 580'
+	$lblPassword.Name = "lblPassword"
+	$lblPassword.Size = '100, 23'
+	$lblPassword.TabIndex = 41
+	$lblPassword.Text = "Password"
+	$lblPassword.TextAlign = 'MiddleLeft'
+	#
+	# txtPassword
+	#
+	$txtPassword.Anchor = 'Top, Left, Right'
+	$txtPassword.Location = '118, 582'
+	$txtPassword.Name = "txtPassword"
+	$txtPassword.Size = '173, 20'
+	$txtPassword.TabIndex = 16
+	$txtPassword.UseSystemPasswordChar = $True
+
+	#
+	# lblGroup									#20141120
+	#
+	$lblGroup.Location = '305, 40'
+	$lblGroup.Name = "lblGroup"
+	$lblGroup.Size = '100, 23'
+	$lblGroup.TabIndex = 44
+	$lblGroup.Text = "Groups Template"
+	$lblGroup.TextAlign = 'MiddleLeft'
+	#
+	# cboGroup									#20141120
+	#
+	$cboGroup.Anchor = 'Top, Left, Right'
+	$cboGroup.FormattingEnabled = $True
+	$cboGroup.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+	$cboGroup.Location = '405, 40'
+	$cboGroup.Name = "cboGroup"
+	$cboGroup.Size = '100, 21'
+	$cboGroup.TabIndex = 11
+	$cboGroup.add_SelectedIndexChanged($cboGroup_SelectedIndexChanged)
+	#
+	# lblLists									#20141114
+	#
+	$lblLists.Location = '305, 65'
+	$lblLists.Name = "lblLists"
+	$lblLists.Size = '100, 23'
+	$lblLists.Width = 210
+	$lblLists.Text = "Distribution Groups"
+	$lblLists.TextAlign = 'MiddleLeft'
+	#
+	# clbLists									#20141114
+	#
+	$clbLists.Location = '305, 90'
+	$clbLists.Name = "clbLists"
+	$clbLists.Size = '210, 150'
+	$clbLists.CheckOnClick = $true;
+	$clbLists.TabIndex = 17
+
+	#
+	# lblGroups									#20141114
+	#
+	$lblGroups.Location = '305, 245'
+	$lblGroups.Name = "lblGroups"
+	$lblGroups.Size = '100, 23'
+	$lblGroups.Width = 210
+	$lblGroups.Text = "Security Groups"
+	$lblGroups.TextAlign = 'MiddleLeft'
+	#
+	# clbGroups									#20141114
+	#
+	$clbGroups.Location = '305, 270'
+	$clbGroups.Name = "clbGroups"
+	$clbGroups.Size = '210, 150'
+	$clbGroups.CheckOnClick = $true;
+	$clbGroups.TabIndex = 18
+
+	#
+	# lblCombo									#20141120
+	#
+	$lblCombo.Location = '305, 425'
+	$lblCombo.Name = "lblCombo"
+	$lblCombo.Size = '100, 23'
+	$lblCombo.Width = 210
+	$lblCombo.Text = "Combo Groups"
+	$lblCombo.TextAlign = 'MiddleLeft'
+	#
+	# clbCombo									#20141120
+	#
+	$clbCombo.Location = '305, 450'
+	$clbCombo.Name = "clbCombo"
+	$clbCombo.Size = '210, 150'
+	$clbCombo.CheckOnClick = $true;
+	$clbCombo.TabIndex = 18
+
+	
+	#
+	# btnSubmit
+	#
+	$btnSubmit.Location = '216, 0'
+	$btnSubmit.Name = "btnSubmit"
+	$btnSubmit.Size = '75, 25'
+	$btnSubmit.TabIndex = 19
+	$btnSubmit.Text = "Submit"
+	$btnSubmit.UseVisualStyleBackColor = $True
+	$btnSubmit.add_Click($btnSubmit_Click)
+	#
+	# SB
+	#
+	$SB.Location = '0, 610'
+	$SB.Name = "SB"
+	$SB.Size = '304, 22'
+	$SB.TabIndex = 45
+	$SB.Text = "Ready"
+
+
+
 	#
 	# btnSubmitAll
 	#
-	$btnSubmitAll.Location = '503, 0'
+	$btnSubmitAll.Location = '728, 35'
 	$btnSubmitAll.Name = "btnSubmitAll"
 	$btnSubmitAll.Size = '75, 25'
 	$btnSubmitAll.TabIndex = 59
@@ -733,7 +1430,7 @@ function Call-ANUC_pff {
 	#
 	# btnLast
 	#
-	$btnLast.Location = '472, 0'
+	$btnLast.Location = '697, 35'
 	$btnLast.Name = "btnLast"
 	$btnLast.Size = '30, 25'
 	$btnLast.TabIndex = 58
@@ -744,7 +1441,7 @@ function Call-ANUC_pff {
 	#
 	# btnNext
 	#
-	$btnNext.Location = '441, 0'
+	$btnNext.Location = '666, 35'
 	$btnNext.Name = "btnNext"
 	$btnNext.Size = '30, 25'
 	$btnNext.TabIndex = 57
@@ -755,7 +1452,7 @@ function Call-ANUC_pff {
 	#
 	# btnPrev
 	#
-	$btnPrev.Location = '410, 0'
+	$btnPrev.Location = '635, 35'
 	$btnPrev.Name = "btnPrev"
 	$btnPrev.Size = '30, 25'
 	$btnPrev.TabIndex = 56
@@ -766,7 +1463,7 @@ function Call-ANUC_pff {
 	#
 	# btnFirst
 	#
-	$btnFirst.Location = '379, 0'
+	$btnFirst.Location = '604, 35'
 	$btnFirst.Name = "btnFirst"
 	$btnFirst.Size = '30, 25'
 	$btnFirst.TabIndex = 55
@@ -777,7 +1474,7 @@ function Call-ANUC_pff {
 	#
 	# btnImportCSV
 	#
-	$btnImportCSV.Location = '303, 0'
+	$btnImportCSV.Location = '528, 35'
 	$btnImportCSV.Name = "btnImportCSV"
 	$btnImportCSV.Size = '75, 25'
 	$btnImportCSV.TabIndex = 54
@@ -790,7 +1487,7 @@ function Call-ANUC_pff {
 	#
 	$lvCSV.FullRowSelect = $True
 	$lvCSV.GridLines = $True
-	$lvCSV.Location = '305, 35'
+	$lvCSV.Location = '530, 65'
 	$lvCSV.Name = "lvCSV"
 	$lvCSV.Size = '1150, 535'
 	$lvCSV.TabIndex = 53
@@ -798,357 +1495,9 @@ function Call-ANUC_pff {
 	$lvCSV.View = 'Details'
 	$lvCSV.Visible = $False
 	$lvCSV.add_SelectedIndexChanged($lvCSV_SelectedIndexChanged)
-	#
-	# txtUPN
-	#
-	$txtUPN.Anchor = 'Top, Left, Right'
-	$txtUPN.Location = '118, 505'
-	$txtUPN.Name = "txtUPN"
-	$txtUPN.Size = '173, 20'
-	$txtUPN.TabIndex = 51
-	#
-	# txtsAM
-	#
-	$txtsAM.Anchor = 'Top, Left, Right'
-	$txtsAM.Location = '118, 480'
-	$txtsAM.Name = "txtsAM"
-	$txtsAM.Size = '173, 20'
-	$txtsAM.TabIndex = 50
-	#
-	# txtDN
-	#
-	$txtDN.Anchor = 'Top, Left, Right'
-	$txtDN.Location = '118, 455'
-	$txtDN.Name = "txtDN"
-	$txtDN.Size = '173, 20'
-	$txtDN.TabIndex = 49
-	#
-	# cboDepartment
-	#
-	$cboDepartment.Anchor = 'Top, Left, Right'
-	$cboDepartment.FormattingEnabled = $True
-	$cboDepartment.Location = '118, 235'
-	$cboDepartment.Name = "cboDepartment"
-	$cboDepartment.Size = '173, 21'
-	$cboDepartment.TabIndex = 8
-	#
-	# labelUserPrincipalName
-	#
-	$labelUserPrincipalName.Location = '10, 505'
-	$labelUserPrincipalName.Name = "labelUserPrincipalName"
-	$labelUserPrincipalName.Size = '100, 23'
-	$labelUserPrincipalName.TabIndex = 48
-	$labelUserPrincipalName.Text = "userPrincipalName"
-	$labelUserPrincipalName.TextAlign = 'MiddleLeft'
-	#
-	# labelSamAccountName
-	#
-	$labelSamAccountName.Location = '10, 480'
-	$labelSamAccountName.Name = "labelSamAccountName"
-	$labelSamAccountName.Size = '100, 23'
-	$labelSamAccountName.TabIndex = 47
-	$labelSamAccountName.Text = "samAccountName"
-	$labelSamAccountName.TextAlign = 'MiddleLeft'
-	#
-	# labelDisplayName
-	#
-	$labelDisplayName.Location = '10, 455'
-	$labelDisplayName.Name = "labelDisplayName"
-	$labelDisplayName.Size = '100, 23'
-	$labelDisplayName.TabIndex = 46
-	$labelDisplayName.Text = "Display Name"
-	$labelDisplayName.TextAlign = 'MiddleLeft'
-	#
-	# SB
-	#
-	$SB.Location = '0, 575'
-	$SB.Name = "SB"
-	$SB.Size = '304, 22'
-	$SB.TabIndex = 45
-	$SB.Text = "Ready"
-	#
-	# cboSite
-	#
-	$cboSite.Anchor = 'Top, Left, Right'
-	$cboSite.FormattingEnabled = $True
-	$cboSite.Location = '118, 320'
-	$cboSite.Name = "cboSite"
-	$cboSite.Size = '173, 21'
-	$cboSite.TabIndex = 11
-	$cboSite.add_SelectedIndexChanged($cboSite_SelectedIndexChanged)
-	#
-	# labelSite
-	#
-	$labelSite.Location = '10, 320'
-	$labelSite.Name = "labelSite"
-	$labelSite.Size = '100, 23'
-	$labelSite.TabIndex = 44
-	$labelSite.Text = "Site"
-	$labelSite.TextAlign = 'MiddleLeft'
-	#
-	# cboDescription
-	#
-	$cboDescription.Anchor = 'Top, Left, Right'
-	$cboDescription.FormattingEnabled = $True
-	$cboDescription.Location = '118, 210'
-	$cboDescription.Name = "cboDescription"
-	$cboDescription.Size = '173, 21'
-	$cboDescription.TabIndex = 7
-	#
-	# txtPassword
-	#
-	$txtPassword.Anchor = 'Top, Left, Right'
-	$txtPassword.Location = '118, 547'
-	$txtPassword.Name = "txtPassword"
-	$txtPassword.Size = '173, 20'
-	$txtPassword.TabIndex = 16
-	$txtPassword.UseSystemPasswordChar = $True
-	#
-	# labelPassword
-	#
-	$labelPassword.Location = '10, 545'
-	$labelPassword.Name = "labelPassword"
-	$labelPassword.Size = '100, 23'
-	$labelPassword.TabIndex = 41
-	$labelPassword.Text = "Password"
-	$labelPassword.TextAlign = 'MiddleLeft'
-	#
-	# cboDomain
-	#
-	$cboDomain.Anchor = 'Top, Left, Right'
-	$cboDomain.FormattingEnabled = $True
-	$cboDomain.Location = '118, 35'
-	$cboDomain.Name = "cboDomain"
-	$cboDomain.Size = '173, 21'
-	$cboDomain.TabIndex = 1
-	$cboDomain.add_SelectedIndexChanged($cboDomain_SelectedIndexChanged)
-	#
-	# labelCurrentDomain
-	#
-	$labelCurrentDomain.Location = '10, 35'
-	$labelCurrentDomain.Name = "labelCurrentDomain"
-	$labelCurrentDomain.Size = '100, 23'
-	$labelCurrentDomain.TabIndex = 39
-	$labelCurrentDomain.Text = "Current Domain"
-	$labelCurrentDomain.TextAlign = 'MiddleLeft'
-	#
-	# txtPostalCode
-	#
-	$txtPostalCode.Anchor = 'Top, Left, Right'
-	$txtPostalCode.Location = '118, 420'
-	$txtPostalCode.Name = "txtPostalCode"
-	$txtPostalCode.Size = '173, 20'
-	$txtPostalCode.TabIndex = 15
-	#
-	# txtState
-	#
-	$txtState.Anchor = 'Top, Left, Right'
-	$txtState.Location = '118, 395'
-	$txtState.Name = "txtState"
-	$txtState.Size = '173, 20'
-	$txtState.TabIndex = 14
-	#
-	# txtCity
-	#
-	$txtCity.Anchor = 'Top, Left, Right'
-	$txtCity.Location = '118, 370'
-	$txtCity.Name = "txtCity"
-	$txtCity.Size = '173, 20'
-	$txtCity.TabIndex = 13
-	#
-	# txtStreetAddress
-	#
-	$txtStreetAddress.Anchor = 'Top, Left, Right'
-	$txtStreetAddress.Location = '118, 345'
-	$txtStreetAddress.Name = "txtStreetAddress"
-	$txtStreetAddress.Size = '173, 20'
-	$txtStreetAddress.TabIndex = 12
-	#
-	# txtOffice
-	#
-	$txtOffice.Anchor = 'Top, Left, Right'
-	$txtOffice.Location = '118, 160'
-	$txtOffice.Name = "txtOffice"
-	$txtOffice.Size = '173, 20'
-	$txtOffice.TabIndex = 5
-	#
-	# txtCompany
-	#
-	$txtCompany.Anchor = 'Top, Left, Right'
-	$txtCompany.Location = '118, 260'
-	$txtCompany.Name = "txtCompany"
-	$txtCompany.Size = '173, 20'
-	$txtCompany.TabIndex = 9
-	#
-	# txtTitle
-	#
-	$txtTitle.Anchor = 'Top, Left, Right'
-	$txtTitle.Location = '118, 185'
-	$txtTitle.Name = "txtTitle"
-	$txtTitle.Size = '173, 20'
-	$txtTitle.TabIndex = 6
-	#
-	# txtOfficePhone
-	#
-	$txtOfficePhone.Anchor = 'Top, Left, Right'
-	$txtOfficePhone.Location = '118, 285'
-	$txtOfficePhone.Name = "txtOfficePhone"
-	$txtOfficePhone.Size = '173, 20'
-	$txtOfficePhone.TabIndex = 10
-	#
-	# txtLastName
-	#
-	$txtLastName.Anchor = 'Top, Left, Right'
-	$txtLastName.Location = '118, 135'
-	$txtLastName.Name = "txtLastName"
-	$txtLastName.Size = '173, 20'
-	$txtLastName.TabIndex = 4
-	$txtLastName.add_TextChanged($txtName_TextChanged)
-	#
-	# cboPath
-	#
-	$cboPath.Anchor = 'Top, Left, Right'
-	$cboPath.FormattingEnabled = $True
-	$cboPath.Location = '45, 65'
-	$cboPath.Name = "cboPath"
-	$cboPath.Size = '247, 21'
-	$cboPath.TabIndex = 2
-	#
-	# labelOU
-	#
-	$labelOU.Location = '10, 65'
-	$labelOU.Name = "labelOU"
-	$labelOU.Size = '36, 23'
-	$labelOU.TabIndex = 26
-	$labelOU.Text = "OU"
-	$labelOU.TextAlign = 'MiddleLeft'
-	#
-	# txtFirstName
-	#
-	$txtFirstName.Anchor = 'Top, Left, Right'
-	$txtFirstName.Location = '118, 110'
-	$txtFirstName.Name = "txtFirstName"
-	$txtFirstName.Size = '173, 20'
-	$txtFirstName.TabIndex = 3
-	$txtFirstName.add_TextChanged($txtName_TextChanged)
-	#
-	# labelPostalCode
-	#
-	$labelPostalCode.Location = '10, 420'
-	$labelPostalCode.Name = "labelPostalCode"
-	$labelPostalCode.Size = '100, 23'
-	$labelPostalCode.TabIndex = 24
-	$labelPostalCode.Text = "Postal Code"
-	$labelPostalCode.TextAlign = 'MiddleLeft'
-	#
-	# labelState
-	#
-	$labelState.Location = '10, 395'
-	$labelState.Name = "labelState"
-	$labelState.Size = '100, 23'
-	$labelState.TabIndex = 23
-	$labelState.Text = "State"
-	$labelState.TextAlign = 'MiddleLeft'
-	#
-	# labelCity
-	#
-	$labelCity.Location = '10, 370'
-	$labelCity.Name = "labelCity"
-	$labelCity.Size = '100, 23'
-	$labelCity.TabIndex = 22
-	$labelCity.Text = "City"
-	$labelCity.TextAlign = 'MiddleLeft'
-	#
-	# labelStreetAddress
-	#
-	$labelStreetAddress.Location = '10, 345'
-	$labelStreetAddress.Name = "labelStreetAddress"
-	$labelStreetAddress.Size = '100, 23'
-	$labelStreetAddress.TabIndex = 21
-	$labelStreetAddress.Text = "Street Address"
-	$labelStreetAddress.TextAlign = 'MiddleLeft'
-	#
-	# labelOffice
-	#
-	$labelOffice.Location = '10, 160'
-	$labelOffice.Name = "labelOffice"
-	$labelOffice.Size = '100, 23'
-	$labelOffice.TabIndex = 20
-	$labelOffice.Text = "Office"
-	$labelOffice.TextAlign = 'MiddleLeft'
-	#
-	# labelCompany
-	#
-	$labelCompany.Location = '10, 260'
-	$labelCompany.Name = "labelCompany"
-	$labelCompany.Size = '100, 23'
-	$labelCompany.TabIndex = 19
-	$labelCompany.Text = "Company"
-	$labelCompany.TextAlign = 'MiddleLeft'
-	#
-	# labelDepartment
-	#
-	$labelDepartment.Location = '10, 235'
-	$labelDepartment.Name = "labelDepartment"
-	$labelDepartment.Size = '100, 23'
-	$labelDepartment.TabIndex = 18
-	$labelDepartment.Text = "Department"
-	$labelDepartment.TextAlign = 'MiddleLeft'
-	#
-	# labelTitle
-	#
-	$labelTitle.Location = '10, 185'
-	$labelTitle.Name = "labelTitle"
-	$labelTitle.Size = '100, 23'
-	$labelTitle.TabIndex = 17
-	$labelTitle.Text = "Title"
-	$labelTitle.TextAlign = 'MiddleLeft'
-	#
-	# btnSubmit
-	#
-	$btnSubmit.Location = '216, 0'
-	$btnSubmit.Name = "btnSubmit"
-	$btnSubmit.Size = '75, 25'
-	$btnSubmit.TabIndex = 17
-	$btnSubmit.Text = "Submit"
-	$btnSubmit.UseVisualStyleBackColor = $True
-	$btnSubmit.add_Click($btnSubmit_Click)
-	#
-	# labelDescription
-	#
-	$labelDescription.Location = '10, 210'
-	$labelDescription.Name = "labelDescription"
-	$labelDescription.Size = '100, 23'
-	$labelDescription.TabIndex = 15
-	$labelDescription.Text = "Description"
-	$labelDescription.TextAlign = 'MiddleLeft'
-	#
-	# labelOfficePhone
-	#
-	$labelOfficePhone.Location = '10, 285'
-	$labelOfficePhone.Name = "labelOfficePhone"
-	$labelOfficePhone.Size = '100, 23'
-	$labelOfficePhone.TabIndex = 14
-	$labelOfficePhone.Text = "Office Phone"
-	$labelOfficePhone.TextAlign = 'MiddleLeft'
-	#
-	# labelLastName
-	#
-	$labelLastName.Location = '10, 135'
-	$labelLastName.Name = "labelLastName"
-	$labelLastName.Size = '100, 23'
-	$labelLastName.TabIndex = 13
-	$labelLastName.Text = "Last Name"
-	$labelLastName.TextAlign = 'MiddleLeft'
-	#
-	# labelFirstName
-	#
-	$labelFirstName.Location = '10, 110'
-	$labelFirstName.Name = "labelFirstName"
-	$labelFirstName.Size = '100, 23'
-	$labelFirstName.TabIndex = 12
-	$labelFirstName.Text = "First Name"
-	$labelFirstName.TextAlign = 'MiddleLeft'
+
+	
+	
 	#
 	# menustrip1
 	#
@@ -1179,7 +1528,7 @@ function Call-ANUC_pff {
 	#
 	$CSVTemplate.CheckPathExists = $False
 	$CSVTemplate.DefaultExt = "csv"
-	$CSVTemplate.FileName = "ANUCusers.csv"
+	$CSVTemplate.FileName = Join-Path $ParentFolder "ANUCusers.csv"
 	$CSVTemplate.Filter = "CSV Files|*.csv|All Files|*.*"
 	$CSVTemplate.ShowHelp = $True
 	$CSVTemplate.Title = "Create CSV Template For ANUC"
@@ -1187,7 +1536,7 @@ function Call-ANUC_pff {
 	#
 	# OFDImportCSV
 	#
-	$OFDImportCSV.FileName = "C:\ANUC\AnucUsers.csv"
+	$OFDImportCSV.FileName = Join-Path $ParentFolder "ANUCusers.csv"
 	$OFDImportCSV.ShowHelp = $True
 	#
 	# CreateCSVTemplate
@@ -1203,8 +1552,8 @@ function Call-ANUC_pff {
 	$MenuExit.Size = '185, 22'
 	$MenuExit.Text = "Exit"
 	$MenuExit.add_Click($MenuExit_Click)
-	#endregion Generated Form Code
 
+	#endregion Generated Form Code
 	#----------------------------------------------
 
 	#Save the initial state of the form
@@ -1217,12 +1566,16 @@ function Call-ANUC_pff {
 	return $formMain.ShowDialog()
 
 } #End Function
+#endregion Form Functions
+#----------------------------------------------
 
 #Call OnApplicationLoad to initialize
-if((OnApplicationLoad) -eq $true)
-{
+if((OnApplicationLoad) -eq $true) {
 	#Call the form
 	Call-ANUC_pff | Out-Null
 	#Perform cleanup
 	OnApplicationExit
 }
+
+#For debugging
+$VerbosePreference = $oldVerbosePreference
