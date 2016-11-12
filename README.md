@@ -22,3 +22,15 @@ Active Directory User Creation tool 1.3
 by Gabriel Jensen
 
 https://community.spiceworks.com/scripts/show/1917-active-directory-user-creation-tool
+
+--------------------------------------------------------------------------------
+
+Active Directory User Creation tool 1.3 (update)
+
+by Jim Smith
+
+Post: https://community.spiceworks.com/scripts/show/1917-active-directory-user-creation-tool#script_comment_9287
+Source: https://www.sugarsync.com/pf/D6555174_9805650_7268276
+
+* Add the user to Security and Distribution Groups
+* Minor fixes
