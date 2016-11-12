@@ -1,6 +1,5 @@
-# ANUC
-
-ANUC Active Directory User Creation
+# ANUC Active Directory User Creation
+[![Code Triagers Badge](https://www.codetriage.com/feldrim/anuc/badges/users.svg)](https://www.codetriage.com/feldrim/anuc)
 
 --------------------------------------------------------------------------------
 
