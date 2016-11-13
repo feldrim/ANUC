@@ -291,6 +291,79 @@ Function Set-DisplayName {
 #endregion Application Functions
 #----------------------------------------------
 
+#region Email functions
+#----------------------------------------------
+
+Function Send-Email{
+  <#
+  .SYNOPSIS
+    Used to send data as an email to a list of addresses
+  .DESCRIPTION
+    This function is used to send an email to a list of addresses. The body can be provided in HTML or plain-text
+  
+  .PARAMETER EmailFrom
+    Mandatory. The email addresses of who you want to send the email from. Example: "admin@9to5IT.com"
+  .PARAMETER EmailTo
+    Mandatory. The email addresses of where to send the email to. Seperate multiple emails by ",". Example: "admin@9to5IT.com, test@test.com"
+  
+  .PARAMETER EmailSubject
+    Mandatory. The subject of the email you want to send. Example: "Cool Script - [" + (Get-Date).ToShortDateString() + "]"
+  .PARAMETER EmailBody
+    Mandatory. The body of the email in plain-text or HTML format."
+  .PARAMETER EmailHTML
+    Mandatory. Boolean. True = email in HTML format (therefore body must be in HTML code). False = email in plain-text format"
+  
+  .INPUTS
+    None - other than parameters above
+  .OUTPUTS
+    Email sent to the list of addresses specified
+  .NOTES
+    Version:        1.0
+    Author:         Luca Sturlese
+    Creation Date:  18/09/14
+    Purpose/Change: Initial function development
+      
+  .EXAMPLE
+    Send-Email -EmailFrom "admin@9to5IT.com" -EmailTo "admin@9to5IT.com, test@test.com" -EmailSubject "Cool Script - [" + (Get-Date).ToShortDateString() + "]" -EmailBody $sHTMLBody -EmailHTML $True
+  .EXAMPLE
+    Send-Email -EmailFrom "admin@9to5IT.com" -EmailTo "admin@9to5IT.com, test@test.com" -EmailSubject "Cool Script - [" + (Get-Date).ToShortDateString() + "]" -EmailBody "This is a test" -EmailHTML $False
+  #>
+    
+  [CmdletBinding()]
+  
+  Param ([Parameter(Mandatory=$true)][string]$EmailFrom, [Parameter(Mandatory=$true)][string]$EmailTo, [Parameter(Mandatory=$true)][string]$EmailSubject, [Parameter(Mandatory=$true)][string]$EmailBody, [Parameter(Mandatory=$true)][boolean]$EmailHTML)
+  
+  Begin{}
+  
+  Process{
+    Try{
+      #SMTP Settings
+      $sSMTPServer = "Set your SMTP Server here"
+
+      #Create Embedded HTML Email Message
+      $oMessage = New-Object System.Net.Mail.MailMessage $EmailFrom, $EmailTo
+      $oMessage.Subject = $EmailSubject
+      $oMessage.IsBodyHtml = $EmailHTML
+      $oMessage.Body = $EmailBody
+            
+      #Create SMTP object and send email
+      $oSMTP = New-Object Net.Mail.SmtpClient($sSMTPServer)
+      $oSMTP.Send($oMessage)
+
+      Exit 0
+    }
+    
+    Catch{
+      Exit 1
+    }
+  }
+  
+  End{}
+  }
+
+#----------------------------------------------
+#endregion Email functions
+
 #region Form Functions
 #----------------------------------------------
 
@@ -595,6 +668,17 @@ function Call-ANUC_pff {
 		Enable-Mailbox $userPrincipalName -DomainController $DomainController #20141117
 		$SB.Text = "Done."
         Write-LogInfo -LogPath $sLogFile -Message “Mailbox enabled.” #Version 1.x
+
+        #Send mail to the supervisor
+        $sHTMLBodyForAdmin = "Hi Supervisor, 'nA new user created through ANUC today. 'nCreated Account: $userPrincipalName ($sAMAccountName) 'nCreator Admin: $env:username"
+        $sMailFrom = $env:username + "@" + $Domain
+        Send-Email -EmailFrom $sMailFrom -EmailTo "supervisor@anuc.com" -EmailSubject "New Active Directory user created" -EmailBody $sHTMLBodyForAdmin -EmailHTML $False
+
+        #Send mail to the user
+        $sMailBodyForUser = "Hi userPrincipalName, 'nWelcome to the <corporate name>. 'nYou can find help files on your home page."
+        $sMailTo = $sAMAccountName + "@" + $Domain
+        Send-Email -EmailFrom $sMailFrom -EmailTo $sMailTo -EmailSubject "Welcome $userPrincipalName" -EmailBody $sMailBodyForUser -EmailHTML $False
+
 	}
 	
 	$cboDomain_SelectedIndexChanged={
@@ -806,6 +890,7 @@ function Call-ANUC_pff {
 			$Fax = $_.Subitems[21].Text
 	
 			$Name = "$GivenName $Surname"
+            $nameList += "$Name ($sAMAccount)'n"
 
 		    if($XML.Options.Settings.Password.ChangeAtLogon -eq "True"){$ChangePasswordAtLogon = $True}
             else{$ChangePasswordAtLogon = $false}
@@ -890,7 +975,20 @@ function Call-ANUC_pff {
 			Enable-Mailbox $userPrincipalName -DomainController $DomainController #20141117
 			$SB.Text = "Done."
             Write-LogInfo -LogPath $sLogFile -Message “Mailbox enabled.” #Version 1.x
-		}
+
+            #Send mail to the user
+            $sMailBodyForUser = "Hi userPrincipalName, 'nWelcome to the <corporate name>. 'nYou can find help files on your home page."
+            $sMailTo = $sAMAccountName + "@" + $Domain
+            Send-Email -EmailFrom $sMailFrom -EmailTo $sMailTo -EmailSubject "Welcome $userPrincipalName" -EmailBody $sMailBodyForUser -EmailHTML $False
+
+		    }
+
+        #Send mail to the supervisor, one for all users in the CSV
+        $sHTMLBodyForAdmin = "Hi Supervisor, 'nNew users created through ANUC today. 'nCreated Accounts: 'n$nameList 'nCreator Admin: $env:username"
+        $sMailFrom = $env:username + "@" + $Domain
+        Send-Email -EmailFrom $sMailFrom -EmailTo "supervisor@anuc.com" -EmailSubject "New Active Directory user created" -EmailBody $sHTMLBodyForAdmin -EmailHTML $False
+
+            
 	}
 	#endregion Generate form action functions
 	#----------------------------------------------
