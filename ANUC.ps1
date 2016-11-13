@@ -21,8 +21,8 @@ $initialLogPath = $PSScriptRoot + '\logs\' #Version 1.x
 #----------------------------------------------
 #region Import Main Assemblies
 #----------------------------------------------
-	Import-Module ActiveDirectory
-	Add-PSSnapin Microsoft.Exchange.Management.PowerShell.E2010
+    LoadModule ActiveDirectory #Version 1.x
+	LoadSnapin Microsoft.Exchange.Management.PowerShell.E2010 #Version 1.x
 	. $env:ExchangeInstallPath\bin\RemoteExchange.ps1
 	Connect-ExchangeServer -auto
 	[System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
@@ -32,7 +32,7 @@ $initialLogPath = $PSScriptRoot + '\logs\' #Version 1.x
 #----------------------------------------------
 #region Import Logging Assemblies “1.x” #Version 1.x
 #----------------------------------------------
-    Import-Module PSLogging
+    LoadModule PSLogging
     $sScriptVersion = $XML.Options.Version
     $sLogPath = $initialLogPath
     $sLogName = 'ANUC.log'
@@ -47,6 +47,21 @@ $initialLogPath = $PSScriptRoot + '\logs\' #Version 1.x
 #----------------------------------------------
 #region Application Functions
 #----------------------------------------------
+function LoadModule($moduleName){ #Version 1.x
+    if(!(Get-Module -List $moduleName) ) {
+        Write-LogWarning -LogPath $sLogFile -Message “Couldn't locate $moduleName Module.”
+    } else{
+        Import-Module $moduleName
+    }
+}
+
+function LoadSnapin($snapinName){ #Version 1.x
+    if((Get-PSSnapin -Name $snapinName) -eq $null) {
+        Add-PSSnapin $snapinName 
+    } else{
+        Write-LogWarning -LogPath $sLogFile -Message “$snapinName Snapin already exists.”
+    }
+}
 function OnApplicationLoad {
     
     Start-Log -LogPath $sLogPath -LogName $sLogName -ScriptVersion $sScriptVersion #Version 1.x
