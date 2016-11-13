@@ -565,7 +565,7 @@ function Call-ANUC_pff {
         }
 		else{
             $SB.Text = "$sAMAccountName created successfully."
-            Write-LogInfo -LogPath $sLogFile -Message “User [$sAMAccountName] created.” #Version 1.x
+            Write-LogInfo -LogPath $sLogFile -Message “User [$sAMAccountName] created by $env:UserDomainName \ $env:username on $env:ComputerName” #Version 1.x
             }
 
 		#create user folder and set permissions
@@ -871,7 +871,7 @@ function Call-ANUC_pff {
             }
             else{
                 $SB.Text = "$sAMAccountName created successfully."
-                Write-LogInfo -LogPath $sLogFile -Message “User [$sAMAccountName] created.” #Version 1.x
+                Write-LogInfo -LogPath $sLogFile -Message “User [$sAMAccountName] created by $env:UserDomainName \ $env:username on $env:ComputerName” #Version 1.x
             }
 			
 			#create user folder and set permissions
