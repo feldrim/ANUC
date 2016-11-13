@@ -30,7 +30,7 @@ $initialLogPath = $PSScriptRoot + '\logs\' #Version 1.x
 #----------------------------------------------
 
 #----------------------------------------------
-#region Import Logging Assemblies “1.x” #Version 1.x
+#region Import Logging Assemblies "1.x" #Version 1.x
 #----------------------------------------------
     LoadModule PSLogging
     $sScriptVersion = $XML.Options.Version
@@ -49,7 +49,7 @@ $initialLogPath = $PSScriptRoot + '\logs\' #Version 1.x
 #----------------------------------------------
 function LoadModule($moduleName){ #Version 1.x
     if(!(Get-Module -List $moduleName) ) {
-        Write-LogWarning -LogPath $sLogFile -Message “Couldn't locate $moduleName Module.”
+        Write-LogWarning -LogPath $sLogFile -Message "Couldn't locate $moduleName Module."
     } else{
         Import-Module $moduleName
     }
@@ -59,7 +59,7 @@ function LoadSnapin($snapinName){ #Version 1.x
     if((Get-PSSnapin -Name $snapinName) -eq $null) {
         Add-PSSnapin $snapinName 
     } else{
-        Write-LogWarning -LogPath $sLogFile -Message “$snapinName Snapin already exists.”
+        Write-LogWarning -LogPath $sLogFile -Message "$snapinName Snapin already exists."
     }
 }
 function OnApplicationLoad {
@@ -199,11 +199,11 @@ $CreateXML = @"
 	            $TemplateMsg = "Opening XML configuration file for editing ($XMLFile).  Please relaunch the script when the configuration is complete."
 	            [System.Windows.Forms.MessageBox]::Show($TemplateMsg,"Information",[System.Windows.Forms.MessageBoxButtons]::Ok) | Out-Null
 				notepad $XMLFile
-                Write-LogInfo -LogPath $sLogFile -Message “New XML configuration file created.” #Version 1.x
+                Write-LogInfo -LogPath $sLogFile -Message "New XML configuration file created." #Version 1.x
 	            Exit
 		 	    }
 	        else{
-                Write-LogInfo -LogPath $sLogFile -Message “Options file found.” #Version 1.x
+                Write-LogInfo -LogPath $sLogFile -Message "Options file found." #Version 1.x
                 Exit
                 }
 		}
@@ -212,10 +212,10 @@ $CreateXML = @"
 	        {
 	        $VersionMsg = "You are using an older version of the Options file.  Please generate a new Options file and transfer your settings.`r`nIn Use: $($XML.Options.Version) `r`nLatest: $(([xml]$CreateXML).Options.Version)"
 	        [System.Windows.Forms.MessageBox]::Show($VersionMsg,"Warning",[System.Windows.Forms.MessageBoxButtons]::Ok)
-            Write-LogWarning -LogPath $sLogFile -Message “An older version of the Options file is detected.” #Version 1.x
+            Write-LogWarning -LogPath $sLogFile -Message "An older version of the Options file is detected." #Version 1.x
 	        }
 	    else{
-            Write-LogInfo -LogPath $sLogFile -Message “Correct version of the Options file is found.” #Version 1.x 
+            Write-LogInfo -LogPath $sLogFile -Message "Correct version of the Options file is found." #Version 1.x 
             }
 		return $true #return true for success or false for failure
 }
@@ -223,7 +223,7 @@ $CreateXML = @"
 function OnApplicationExit {
 	Remove-PSSnapin -Name Microsoft.Exchange.Management.PowerShell.E2010
 	Remove-Module -Name ActiveDirectory
-    Write-LogInfo -LogPath $sLogFile -Message “Exited succesfully.” #Version 1.x
+    Write-LogInfo -LogPath $sLogFile -Message "Exited succesfully." #Version 1.x
     Stop-Log -LogPath $sLogFile #Version 1.x
 	$script:ExitCode = 0 #Set the exit code for the Packager
 }
@@ -382,7 +382,7 @@ function Call-ANUC_pff {
 	[void][reflection.assembly]::Load("mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
 	[void][reflection.assembly]::Load("System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 
-    Write-LogInfo -LogPath $sLogFile -Message “Form Assemblies loaded.” #Version 1.x
+    Write-LogInfo -LogPath $sLogFile -Message "Form Assemblies loaded." #Version 1.x
 	#endregion Import Form Assemblies
 	#----------------------------------------------
 	#region Generated Form Objects
@@ -544,7 +544,7 @@ function Call-ANUC_pff {
 		$Headers = @('ID','Domain','Path','FirstName','LastName','Office','Title','Description','Department','Company','Phone','Fax','Mobile','StreetAddress','City','State','PostalCode','Password','sAMAccountName','userPrincipalName','DisplayName')
 		$Headers| %{[Void]$lvCSV.Columns.Add($_)}
         
-        Write-LogInfo -LogPath $sLogFile -Message “Form created.” #Version 1.x
+        Write-LogInfo -LogPath $sLogFile -Message "Form created." #Version 1.x
 	}
 	
 	$btnSubmit_Click={
@@ -638,18 +638,18 @@ function Call-ANUC_pff {
         }
 		else{
             $SB.Text = "$sAMAccountName created successfully."
-            Write-LogInfo -LogPath $sLogFile -Message “User [$sAMAccountName] created by $env:UserDomainName \ $env:username on $env:ComputerName” #Version 1.x
+            Write-LogInfo -LogPath $sLogFile -Message "User [$sAMAccountName] created by $env:UserDomainName \ $env:username on $env:ComputerName" #Version 1.x
             }
 
 		#create user folder and set permissions
 		$SB.Text = "Creating user folder and setting permissions"
 		New-Item -path $UserDirectory -name $sAMAccountName -type directory
-        Write-LogInfo -LogPath $sLogFile -Message “User folder created.” #Version 1.x
+        Write-LogInfo -LogPath $sLogFile -Message "User folder created." #Version 1.x
 		$ACL = Get-Acl $HomeDirectory
 		$Ar = New-Object System.Security.AccessControl.FileSystemAccessRule($userPrincipalName, "FullControl", "ContainerInherit, ObjectInherit", "None", "Allow")
 		$ACL.AddAccessRule($Ar)
 		Set-Acl $HomeDirectory $Acl
-        Write-LogInfo -LogPath $sLogFile -Message “User folder permissions set.” #Version 1.x
+        Write-LogInfo -LogPath $sLogFile -Message "User folder permissions set." #Version 1.x
 
 		#Add user to Security Groups
 		$SB.Text = "Add user to Security Groups"
@@ -667,7 +667,7 @@ function Call-ANUC_pff {
 		$SB.Text = "Mail Enable new user"
 		Enable-Mailbox $userPrincipalName -DomainController $DomainController #20141117
 		$SB.Text = "Done."
-        Write-LogInfo -LogPath $sLogFile -Message “Mailbox enabled.” #Version 1.x
+        Write-LogInfo -LogPath $sLogFile -Message "Mailbox enabled." #Version 1.x
 
         #Send mail to the supervisor
         $sHTMLBodyForAdmin = "Hi Supervisor, 'nA new user created through ANUC today. 'nCreated Account: $userPrincipalName ($sAMAccountName) 'nCreator Admin: $env:username"
@@ -956,25 +956,25 @@ function Call-ANUC_pff {
             }
             else{
                 $SB.Text = "$sAMAccountName created successfully."
-                Write-LogInfo -LogPath $sLogFile -Message “User [$sAMAccountName] created by $env:UserDomainName \ $env:username on $env:ComputerName” #Version 1.x
+                Write-LogInfo -LogPath $sLogFile -Message "User [$sAMAccountName] created by $env:UserDomainName \ $env:username on $env:ComputerName" #Version 1.x
             }
 			
 			#create user folder and set permissions
 			$SB.Text = "Creating user folder and setting permissions"
 			New-Item -path $UserDirectory -name $sAMAccountName -type directory
-            Write-LogInfo -LogPath $sLogFile -Message “User folder created.” #Version 1.x
+            Write-LogInfo -LogPath $sLogFile -Message "User folder created." #Version 1.x
 			$DomainUser = $DomainNS + '\' + $sAMAccountName
 			$ACL = Get-acl $HomeDirectory
 			$Ar = New-Object System.Security.AccessControl.FileSystemAccessRule($userPrincipalName, "FullControl", "ContainerInherit, ObjectInherit", "None", "Allow")
 			$Acl.SetAccessRule($Ar)
 			Set-Acl $HomeDirectory $Acl
-            Write-LogInfo -LogPath $sLogFile -Message “User folder permissions set.” #Version 1.x
+            Write-LogInfo -LogPath $sLogFile -Message "User folder permissions set." #Version 1.x
 			
 			#Mail Enable new user
 			$SB.Text = "Mail Enable new user"
 			Enable-Mailbox $userPrincipalName -DomainController $DomainController #20141117
 			$SB.Text = "Done."
-            Write-LogInfo -LogPath $sLogFile -Message “Mailbox enabled.” #Version 1.x
+            Write-LogInfo -LogPath $sLogFile -Message "Mailbox enabled." #Version 1.x
 
             #Send mail to the user
             $sMailBodyForUser = "Hi userPrincipalName, 'nWelcome to the <corporate name>. 'nYou can find help files on your home page."
@@ -1743,7 +1743,7 @@ function Call-ANUC_pff {
 	$formMain.add_FormClosed($Form_Cleanup_FormClosed)
 	#Show the Form
 	return $formMain.ShowDialog()
-    Write-LogInfo -LogPath $sLogFile -Message “Form created.” #Version 1.x
+    Write-LogInfo -LogPath $sLogFile -Message "Form created." #Version 1.x
 
 } #End Function
 #endregion Form Functions
