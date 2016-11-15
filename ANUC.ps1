@@ -68,128 +68,129 @@ function LoadModule($moduleName){ #Version 1.x
 
 $CreateXML = @"
 <?xml version="1.0" standalone="no"?>
-<OPTIONS Product="AD New User Creation" Version="1.3">
-<Settings>
-<sAMAccountName Generate="True">
-<Style Format="FirstName.LastName" Enabled="False" />
-<Style Format="FirstInitialLastName" Enabled="True" /> 
-<Style Format="LastNameFirstInitial" Enabled="False" />
-</sAMAccountName>
-<UPN Generate="True">
-<Style Format="FirstName.LastName" Enabled="False" />
-<Style Format="FirstInitialLastName" Enabled="True" />
-<Style Format="LastNameFirstInitial" Enabled="False" />
-</UPN>
-<DisplayName Generate="True">
-<Style Format="FirstName LastName" Enabled="True" />
-<Style Format="LastName, FirstName" Enabled="False" />
-</DisplayName>
-<LowerCaseUserNames Enabled="True" />
-<AccountStatus Enabled="True" />
-<Password ChangeAtLogon="True" />
-<DomainController>YOUR.DOMAIN-CONTROLLER.COM</DomainController>
-<DomainNS>YOURDOMAIN</DomainNS>
-<ScriptPath>LOGIN_SCRIPT.bat</ScriptPath>
-<UserDirectory>\\SERVER\Users\</UserDirectory>
-<Subfolders>
-<Subfolder>Temp</Subfolder>
-<Subfolder>Business</Subfolder>
-</Subfolder>
-<HomeDrive>U:</HomeDrive>
-<HomePage>http://your.homepage.com/</HomePage>
-</Settings>
-<Default>
-<Domain>awesome.local</Domain>
-<Path>OU=MyOU,DC=awesome,DC=local</Path>
-<FirstName></FirstName>
-<LastName></LastName>
-<Office></Office>
-<Title></Title>
-<Description>Full-Time Employee</Description>
-<Department>IT</Department>
-<Company>Awesome Inc.</Company>
-<Site>TN</Site>
-<Country>US</Country>
-<Password>P@ssw0rd</Password>
-<Group>Normal User</Group>
-</Default>
-<Locations>
-<Location Site="TN">
-<StreetAddress>1 Main Street</StreetAddress>
-<City>Nashville</City>
-<State>TN</State>
-<PostalCode>10001</PostalCode>
-<Phone>888-555-0000</Phone>
-<Fax>888-555-0000</Fax>
-</Location>
-<Location Site="Custom">
-<StreetAddress></StreetAddress>
-<City></City>
-<State></State>
-<PostalCode></PostalCode>
-<Phone></Phone>
-<Fax></Fax>
-</Location>
-</Locations>
-<Domains>
-<Domain Name="awesome.local">
-<Path>OU=MyOU,DC=awesome,DC=local</Path>
-<Path>CN=Users,DC=awesome,DC=local</Path>
-</Domain>
-<Domain Name="awesome.lab">
-<Path>OU=RPUsers1,DC=awesome,DC=lab</Path>
-<Path>OU=RPUsers2,DC=awesome,DC=lab</Path>
-<Path>OU=RPUsers3,DC=awesome,DC=lab</Path>
-</Domain>
-</Domains>
-<Descriptions>
-<Description>Full-Time Employee</Description>
-<Description>Part-Time Employee</Description>
-<Description>Consultant</Description>
-<Description>Intern</Description>
-<Description>Service Account</Description>
-<Description>Temp</Description>
-<Description>Freelancer</Description>
-</Descriptions>
-<Departments>
-<Department>Finance</Department>
-<Department>IT</Department>
-<Department>Marketing</Department>
-<Department>Sales</Department>
-<Department>Executive</Department>
-<Department>Human Resources</Department>
-<Department>Security</Department>
-</Departments>
-<JobTitles>
-<JobTitle>Accountant</JobTitle>
-<JobTitle>Project Manager</JobTitle>
-<JobTitle>Intern</JobTitle>
-<JobTitle>Office Administrator</JobTitle>
-</JobTitles>
-<Groups>
-<Group Name="Normal User">
-<List Type="SecurityGroup">Awesome Users</List>
-<List Type="ComboGroup">Security and Distribution List</List>
-<List Type="DistributionList">Awesome List</List>
-</Group>
-<Group Name="Administrator">
-<List Type="SecurityGroup">Admin Users</List>
-<List Type="SecurityGroup">Awesome Users</List>
-<List Type="ComboGroup">Security and Distribution List</List>
-<List Type="DistributionList">Awesome List</List>
-</Group>
-</Groups>
-<SecurityGroups>
-<SecurityGroup>Awesome Users</SecurityGroup>
-<SecurityGroup>Admin Users</SecurityGroup>
-</SecurityGroups>
-<ComboGroups>
-<ComboGroup>Security and Distribution List</ComboGroup>
-</ComboGroups>
-<DistributionLists>
-<DistributionList>Awesome List</DistributionList>
-</DistributionLists>
+<OPTIONS Product="AD New User Creation" Version="1.4">
+  <Settings>
+    <sAMAccountName Generate="True">
+      <Style Format="FirstName.LastName" Enabled="False" />
+      <Style Format="FirstInitialLastName" Enabled="True" /> 
+      <Style Format="LastNameFirstInitial" Enabled="False" />
+    </sAMAccountName>
+    <UPN Generate="True">
+      <Style Format="FirstName.LastName" Enabled="False" />
+      <Style Format="FirstInitialLastName" Enabled="True" />
+      <Style Format="LastNameFirstInitial" Enabled="False" />
+    </UPN>
+    <DisplayName Generate="True">
+      <Style Format="FirstName LastName" Enabled="True" />
+      <Style Format="LastName, FirstName" Enabled="False" />
+    </DisplayName>
+    <LowerCaseUserNames Enabled="True" />
+    <AccountStatus Enabled="True" />
+    <Password ChangeAtLogon="True" />
+    <DomainController>YOUR.DOMAIN-CONTROLLER.COM</DomainController>
+    <DomainNS>YOURDOMAIN</DomainNS>
+    <ScriptPath>LOGIN_SCRIPT.bat</ScriptPath>
+    <UserDirectory>\\SERVER\Users\</UserDirectory>
+    <Subfolders>
+      <Subfolder>Temp</Subfolder>
+      <Subfolder>Business</Subfolder>
+    </Subfolders>
+    <HomeDrive>U:</HomeDrive>
+    <HomePage>http://your.homepage.com/</HomePage>
+  </Settings>
+  <Default>
+    <Domain>awesome.local</Domain>
+    <Path>OU=MyOU,DC=awesome,DC=local</Path>
+    <FirstName></FirstName>
+    <LastName></LastName>
+    <Office></Office>
+    <Title></Title>
+    <Description>Full-Time Employee</Description>
+    <Department>IT</Department>
+    <Company>Awesome Inc.</Company>
+    <Site>TN</Site>
+    <Country>US</Country>
+    <Password>P@ssw0rd</Password>
+    <Group>Normal User</Group>
+  </Default>
+  <Locations>
+    <Location Site="TN">
+      <StreetAddress>1 Main Street</StreetAddress>
+      <City>Nashville</City>
+      <State>TN</State>
+      <PostalCode>10001</PostalCode>
+      <Phone>888-555-0000</Phone>
+      <Fax>888-555-0000</Fax>
+    </Location>
+    <Location Site="Custom">
+      <StreetAddress></StreetAddress>
+      <City></City>
+      <State></State>
+      <PostalCode></PostalCode>
+      <Phone></Phone>
+      <Fax></Fax>
+    </Location>
+  </Locations>
+  <Domains>
+    <Domain Name="awesome.local">
+      <Path>OU=MyOU,DC=awesome,DC=local</Path>
+      <Path>CN=Users,DC=awesome,DC=local</Path>
+    </Domain>
+    <Domain Name="awesome.lab">
+      <Path>OU=RPUsers1,DC=awesome,DC=lab</Path>
+      <Path>OU=RPUsers2,DC=awesome,DC=lab</Path>
+      <Path>OU=RPUsers3,DC=awesome,DC=lab</Path>
+    </Domain>
+  </Domains>
+  <Descriptions>
+    <Description>Full-Time Employee</Description>
+    <Description>Part-Time Employee</Description>
+    <Description>Consultant</Description>
+    <Description>Intern</Description>
+    <Description>Service Account</Description>
+    <Description>Temp</Description>
+    <Description>Freelancer</Description>
+  </Descriptions>
+  <Departments>
+    <Department>Finance</Department>
+    <Department>IT</Department>
+    <Department>Marketing</Department>
+    <Department>Sales</Department>
+    <Department>Executive</Department>
+    <Department>Human Resources</Department>
+    <Department>Security</Department>
+  </Departments>
+  <JobTitles>
+    <JobTitle>Accountant</JobTitle>
+    <JobTitle>Project Manager</JobTitle>
+    <JobTitle>Intern</JobTitle>
+    <JobTitle>Office Administrator</JobTitle>
+  </JobTitles>
+  <Groups>
+    <Group Name="Normal User">
+      <List Type="SecurityGroup">Awesome Users</List>
+      <List Type="ComboGroup">Security and Distribution List</List>
+      <List Type="DistributionList">Awesome List</List>
+    </Group>
+    <Group Name="Administrator">
+      <List Type="SecurityGroup">Admin Users</List>
+      <List Type="SecurityGroup">Awesome Users</List>
+      <List Type="ComboGroup">Security and Distribution List</List>
+      <List Type="DistributionList">Awesome List</List>
+    </Group>
+  </Groups>
+  <SecurityGroups>
+    <SecurityGroup>Awesome Users</SecurityGroup>
+    <SecurityGroup>Admin Users</SecurityGroup>
+  </SecurityGroups>
+  <ComboGroups>
+    <ComboGroup>Security and Distribution List</ComboGroup>
+  </ComboGroups>
+  <DistributionLists>
+    <DistributionList>Awesome List</DistributionList>
+  </DistributionLists>
 </OPTIONS>
+
 "@
             
             $Script:ParentFolder = Split-Path (Get-Variable MyInvocation -scope 1 -ValueOnly).MyCommand.Definition
@@ -651,9 +652,8 @@ function Call-ANUC_pff {
     $SB.Text = "Creating user folder and setting permissions"
     New-Item -path $UserDirectory -name $sAMAccountName -type directory
     Write-LogInfo -LogPath $sLogFile -Message "User folder created." #Version 1.x
-    ForEach($Subfolder in $Subfolders){       #Version 1.x
-        $SubfolderPath = $UserDirectory + $Subfolder
-        New-Item -path $SubfolderPath -name $Subfolder -type directory
+    ForEach($Subfolder in $Subfolders.Subfolder){       #Version 1.x
+        New-Item -path $HomeDirectory -name $Subfolder -type directory
         Write-LogInfo -LogPath $sLogFile -Message "User subfolder ($Subfolder) created." #Version 1.x
     }
 
@@ -977,9 +977,8 @@ $btnSubmitAll_Click={
         $SB.Text = "Creating user folder and setting permissions"
         New-Item -path $UserDirectory -name $sAMAccountName -type directory
         Write-LogInfo -LogPath $sLogFile -Message "User folder created." #Version 1.x
-        ForEach($Subfolder in $Subfolders){       #Version 1.x
-            $SubfolderPath = $UserDirectory + $Subfolder
-            New-Item -path $SubfolderPath -name $Subfolder -type directory
+        ForEach($Subfolder in $Subfolders.Subfolder){       #Version 1.x
+            New-Item -path $HomeDirectory -name $Subfolder -type directory
             Write-LogInfo -LogPath $sLogFile -Message "User subfolder ($Subfolder) created." #Version 1.x
         }
         $DomainUser = $DomainNS + '\' + $sAMAccountName
@@ -1172,9 +1171,6 @@ $cboPath.Location = '45, 65'
 $cboPath.Name = "cboPath"
 $cboPath.Size = '247, 21'
 $cboPath.TabIndex = 2
-
-
-
 #
 # lblFirstName
 #
@@ -1316,9 +1312,6 @@ $txtMobilePhone.Location = '118, 285'
 $txtMobilePhone.Name = "txtMobilePhone"
 $txtMobilePhone.Size = '173, 20'
 $txtMobilePhone.TabIndex = 10
-
-
-
 #
 # lblSite
 #
@@ -1373,10 +1366,6 @@ $txtFax.Location = '118, 370'
 $txtFax.Name = "txtFax"
 $txtFax.Size = '173, 20'
 $txtFax.TabIndex = 10
-
-
-
-
 #
 # lblStreetAddress
 #
@@ -1445,8 +1434,6 @@ $txtPostalCode.Location = '118, 470'
 $txtPostalCode.Name = "txtPostalCode"
 $txtPostalCode.Size = '173, 20'
 $txtPostalCode.TabIndex = 15
-
-
 #
 # lblDisplayName
 #
@@ -1516,7 +1503,6 @@ $txtPassword.Name = "txtPassword"
 $txtPassword.Size = '173, 20'
 $txtPassword.TabIndex = 16
 $txtPassword.UseSystemPasswordChar = $True
-
 #
 # lblGroup                                  #20141120
 #
@@ -1554,7 +1540,6 @@ $clbLists.Name = "clbLists"
 $clbLists.Size = '210, 150'
 $clbLists.CheckOnClick = $true;
 $clbLists.TabIndex = 17
-
 #
 # lblGroups                                 #20141114
 #
@@ -1572,7 +1557,6 @@ $clbGroups.Name = "clbGroups"
 $clbGroups.Size = '210, 150'
 $clbGroups.CheckOnClick = $true;
 $clbGroups.TabIndex = 18
-
 #
 # lblCombo                                  #20141120
 #
@@ -1590,8 +1574,6 @@ $clbCombo.Name = "clbCombo"
 $clbCombo.Size = '210, 150'
 $clbCombo.CheckOnClick = $true;
 $clbCombo.TabIndex = 18
-
-
 #
 # btnSubmit
 #
@@ -1610,9 +1592,6 @@ $SB.Name = "SB"
 $SB.Size = '304, 22'
 $SB.TabIndex = 45
 $SB.Text = "Ready"
-
-
-
 #
 # btnSubmitAll
 #
@@ -1692,9 +1671,6 @@ $lvCSV.UseCompatibleStateImageBehavior = $False
 $lvCSV.View = 'Details'
 $lvCSV.Visible = $False
 $lvCSV.add_SelectedIndexChanged($lvCSV_SelectedIndexChanged)
-
-
-
 #
 # menustrip1
 #
