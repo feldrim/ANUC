@@ -1,10 +1,33 @@
-﻿#========================================================================
-# Date: 3/2/2013 7:34 PM
-# Author:Rich Prescott
-# updated by: Gabriel Jensen
-#             Jim Smith (v1.3)
-# http://community.spiceworks.com/scripts/show/1917-active-directory-user-creation-tool
-#========================================================================
+﻿<#
+    .SYNOPSIS
+        Active Directory User Creation Tool v1.4
+
+    .DESCRIPTION
+        A Powershell-GUI tool for creating AD user accounts, single or bulk.
+
+    .INPUTS
+        ANUC.Options.XML: Settings and default options file.
+        Form input
+
+    .OUTPUTS
+        ANUC.log: Log file created under \logs folder.
+
+    .LINK
+        https://github.com/feldrim/ANUC
+
+    .NOTES
+        Mainly based on the script by Rich Prescott, this script includes updates by 
+        Gabriel Jensen and Jim Smith.
+
+    .REQUIREMENTS
+        - PSLogging Module - http://9to5it.com/powershell-logging-v2-easily-create-log-files/
+        - Active Directory Module
+        - Exchange 2010 Snapin
+
+    #> #Version 1.x
+
+[CmdletBinding()] #Version 1.x
+
 
 #For debugging
 $oldVerbosePreference = $VerbosePreference
@@ -97,6 +120,7 @@ $CreateXML = @"
     </Subfolders>
     <HomeDrive>U:</HomeDrive>
     <HomePage>http://your.homepage.com/</HomePage>
+    <SMTPServer>SMTP.awesome.local</SMTPServer>
   </Settings>
   <Default>
     <Domain>awesome.local</Domain>
@@ -343,7 +367,7 @@ $CreateXML = @"
       Process{
         Try{
           #SMTP Settings
-          $sSMTPServer = "Set your SMTP Server here"
+          $sSMTPServer = $XML.Options.Settings.SMTPServer
 
           #Create Embedded HTML Email Message
           $oMessage = New-Object System.Net.Mail.MailMessage $EmailFrom, $EmailTo
