@@ -371,7 +371,7 @@ $CreateXML = @"
       Process{
         Try{
           #SMTP Settings
-          $sSMTPServer = $XML.Options.Settings.SMTPServer
+          $sSMTPServer = $XML.Options.Settings.Email.SMTPServer
 
           #Create Embedded HTML Email Message
           $oMessage = New-Object System.Net.Mail.MailMessage $EmailFrom, $EmailTo
