@@ -90,133 +90,133 @@ function LoadModule($moduleName){ #Version 1.x
 $CreateXML = @"
 <?xml version="1.0" standalone="no"?>
 <OPTIONS Product="AD New User Creation" Version="1.4">
-  <Settings>
-    <sAMAccountName Generate="True">
-      <Style Format="FirstName.LastName" Enabled="False" />
-      <Style Format="FirstInitialLastName" Enabled="True" /> 
-      <Style Format="LastNameFirstInitial" Enabled="False" />
-    </sAMAccountName>
-    <UPN Generate="True">
-      <Style Format="FirstName.LastName" Enabled="False" />
-      <Style Format="FirstInitialLastName" Enabled="True" />
-      <Style Format="LastNameFirstInitial" Enabled="False" />
-    </UPN>
-    <DisplayName Generate="True">
-      <Style Format="FirstName LastName" Enabled="True" />
-      <Style Format="LastName, FirstName" Enabled="False" />
-    </DisplayName>
-    <LowerCaseUserNames Enabled="True" />
-    <AccountStatus Enabled="True" />
-    <Password ChangeAtLogon="True" />
-    <DomainController>YOUR.DOMAIN-CONTROLLER.COM</DomainController>
-    <DomainNS>YOURDOMAIN</DomainNS>
-    <ScriptPath>LOGIN_SCRIPT.bat</ScriptPath>
-    <UserDirectory>\\SERVER\Users\</UserDirectory>
-    <Subfolders>
-      <Subfolder>Temp</Subfolder>
-      <Subfolder>Business</Subfolder>
-    </Subfolders>
-    <HomeDrive>U:</HomeDrive>
-    <HomePage>http://your.homepage.com/</HomePage>
-    <Email EnableHtml="True">
-    	<Administrator>admin@anuc.com</Administrator>
-    	<Supervisor>supervisor@anuc.com</Supervisor>
-    	<SubjectToSupervisor>New User Created</SubjectToSupervisor>
-    	<SubjectToUser>Welcome</SubjectToUser>
-    </Email>
-    <SMTPServer>SMTP.awesome.local</SMTPServer>
-  </Settings>
-  <Default>
-    <Domain>awesome.local</Domain>
-    <Path>OU=MyOU,DC=awesome,DC=local</Path>
-    <FirstName></FirstName>
-    <LastName></LastName>
-    <Office></Office>
-    <Title></Title>
-    <Description>Full-Time Employee</Description>
-    <Department>IT</Department>
-    <Company>Awesome Inc.</Company>
-    <Site>TN</Site>
-    <Country>US</Country>
-    <Password>P@ssw0rd</Password>
-    <Group>Normal User</Group>
-  </Default>
-  <Locations>
-    <Location Site="TN">
-      <StreetAddress>1 Main Street</StreetAddress>
-      <City>Nashville</City>
-      <State>TN</State>
-      <PostalCode>10001</PostalCode>
-      <Phone>888-555-0000</Phone>
-      <Fax>888-555-0000</Fax>
-    </Location>
-    <Location Site="Custom">
-      <StreetAddress></StreetAddress>
-      <City></City>
-      <State></State>
-      <PostalCode></PostalCode>
-      <Phone></Phone>
-      <Fax></Fax>
-    </Location>
-  </Locations>
-  <Domains>
-    <Domain Name="awesome.local">
-      <Path>OU=MyOU,DC=awesome,DC=local</Path>
-      <Path>CN=Users,DC=awesome,DC=local</Path>
-    </Domain>
-    <Domain Name="awesome.lab">
-      <Path>OU=RPUsers1,DC=awesome,DC=lab</Path>
-      <Path>OU=RPUsers2,DC=awesome,DC=lab</Path>
-      <Path>OU=RPUsers3,DC=awesome,DC=lab</Path>
-    </Domain>
-  </Domains>
-  <Descriptions>
-    <Description>Full-Time Employee</Description>
-    <Description>Part-Time Employee</Description>
-    <Description>Consultant</Description>
-    <Description>Intern</Description>
-    <Description>Service Account</Description>
-    <Description>Temp</Description>
-    <Description>Freelancer</Description>
-  </Descriptions>
-  <Departments>
-    <Department>Finance</Department>
-    <Department>IT</Department>
-    <Department>Marketing</Department>
-    <Department>Sales</Department>
-    <Department>Executive</Department>
-    <Department>Human Resources</Department>
-    <Department>Security</Department>
-  </Departments>
-  <JobTitles>
-    <JobTitle>Accountant</JobTitle>
-    <JobTitle>Project Manager</JobTitle>
-    <JobTitle>Intern</JobTitle>
-    <JobTitle>Office Administrator</JobTitle>
-  </JobTitles>
-  <Groups>
-    <Group Name="Normal User">
-      <List Type="SecurityGroup">Awesome Users</List>
-      <List Type="ComboGroup">Security and Distribution List</List>
-      <List Type="DistributionList">Awesome List</List>
-    </Group>
-    <Group Name="Administrator">
-      <List Type="SecurityGroup">Admin Users</List>
-      <List Type="SecurityGroup">Awesome Users</List>
-      <List Type="ComboGroup">Security and Distribution List</List>
-      <List Type="DistributionList">Awesome List</List>
-    </Group>
-  </Groups>
-  <SecurityGroups>
-    <SecurityGroup>Awesome Users</SecurityGroup>
-    <SecurityGroup>Admin Users</SecurityGroup>
-  </SecurityGroups>
-  <ComboGroups>
-    <ComboGroup>Security and Distribution List</ComboGroup>
-  </ComboGroups>
-  <DistributionLists>
-    <DistributionList>Awesome List</DistributionList>
-  </DistributionLists>
+    <Settings>
+        <sAMAccountName Generate="True">
+            <Style Format="FirstName.LastName" Enabled="False" />
+            <Style Format="FirstInitialLastName" Enabled="True" /> 
+            <Style Format="LastNameFirstInitial" Enabled="False" />
+        </sAMAccountName>
+        <UPN Generate="True">
+            <Style Format="FirstName.LastName" Enabled="False" />
+            <Style Format="FirstInitialLastName" Enabled="True" />
+            <Style Format="LastNameFirstInitial" Enabled="False" />
+        </UPN>
+        <DisplayName Generate="True">
+            <Style Format="FirstName LastName" Enabled="True" />
+            <Style Format="LastName, FirstName" Enabled="False" />
+        </DisplayName>
+        <LowerCaseUserNames Enabled="True" />
+        <AccountStatus Enabled="True" />
+        <Password ChangeAtLogon="True" />
+        <DomainController>YOUR.DOMAIN-CONTROLLER.COM</DomainController>
+        <DomainNS>YOURDOMAIN</DomainNS>
+        <ScriptPath>LOGIN_SCRIPT.bat</ScriptPath>
+        <UserDirectory>\\SERVER\Users\</UserDirectory>
+        <Subfolders>
+            <Subfolder>Temp</Subfolder>
+            <Subfolder>Business</Subfolder>
+        </Subfolders>
+        <HomeDrive>U:</HomeDrive>
+        <HomePage>http://your.homepage.com/</HomePage>
+        <Email EnableHtml="True" SendToSupervisor="True" SendToUser="True">
+            <Administrator>admin@anuc.com</Administrator>
+            <Supervisor>supervisor@anuc.com</Supervisor>
+            <SubjectToSupervisor>New User Created</SubjectToSupervisor>
+            <SubjectToUser>Welcome</SubjectToUser>
+            <SMTPServer>SMTP.awesome.local</SMTPServer>
+        </Email>
+    </Settings>
+    <Default>
+        <Domain>awesome.local</Domain>
+        <Path>OU=MyOU,DC=awesome,DC=local</Path>
+        <FirstName></FirstName>
+        <LastName></LastName>
+        <Office></Office>
+        <Title></Title>
+        <Description>Full-Time Employee</Description>
+        <Department>IT</Department>
+        <Company>Awesome Inc.</Company>
+        <Site>TN</Site>
+        <Country>US</Country>
+        <Password>P@ssw0rd</Password>
+        <Group>Normal User</Group>
+    </Default>
+    <Locations>
+        <Location Site="TN">
+            <StreetAddress>1 Main Street</StreetAddress>
+            <City>Nashville</City>
+            <State>TN</State>
+            <PostalCode>10001</PostalCode>
+            <Phone>888-555-0000</Phone>
+            <Fax>888-555-0000</Fax>
+        </Location>
+        <Location Site="Custom">
+            <StreetAddress></StreetAddress>
+            <City></City>
+            <State></State>
+            <PostalCode></PostalCode>
+            <Phone></Phone>
+            <Fax></Fax>
+        </Location>
+    </Locations>
+    <Domains>
+        <Domain Name="awesome.local">
+            <Path>OU=MyOU,DC=awesome,DC=local</Path>
+            <Path>CN=Users,DC=awesome,DC=local</Path>
+        </Domain>
+        <Domain Name="awesome.lab">
+            <Path>OU=RPUsers1,DC=awesome,DC=lab</Path>
+            <Path>OU=RPUsers2,DC=awesome,DC=lab</Path>
+            <Path>OU=RPUsers3,DC=awesome,DC=lab</Path>
+        </Domain>
+    </Domains>
+    <Descriptions>
+        <Description>Full-Time Employee</Description>
+        <Description>Part-Time Employee</Description>
+        <Description>Consultant</Description>
+        <Description>Intern</Description>
+        <Description>Service Account</Description>
+        <Description>Temp</Description>
+        <Description>Freelancer</Description>
+    </Descriptions>
+    <Departments>
+        <Department>Finance</Department>
+        <Department>IT</Department>
+        <Department>Marketing</Department>
+        <Department>Sales</Department>
+        <Department>Executive</Department>
+        <Department>Human Resources</Department>
+        <Department>Security</Department>
+    </Departments>
+    <JobTitles>
+        <JobTitle>Accountant</JobTitle>
+        <JobTitle>Project Manager</JobTitle>
+        <JobTitle>Intern</JobTitle>
+        <JobTitle>Office Administrator</JobTitle>
+    </JobTitles>
+    <Groups>
+        <Group Name="Normal User">
+            <List Type="SecurityGroup">Awesome Users</List>
+            <List Type="ComboGroup">Security and Distribution List</List>
+            <List Type="DistributionList">Awesome List</List>
+        </Group>
+        <Group Name="Administrator">
+            <List Type="SecurityGroup">Admin Users</List>
+            <List Type="SecurityGroup">Awesome Users</List>
+            <List Type="ComboGroup">Security and Distribution List</List>
+            <List Type="DistributionList">Awesome List</List>
+        </Group>
+    </Groups>
+    <SecurityGroups>
+        <SecurityGroup>Awesome Users</SecurityGroup>
+        <SecurityGroup>Admin Users</SecurityGroup>
+    </SecurityGroups>
+    <ComboGroups>
+        <ComboGroup>Security and Distribution List</ComboGroup>
+    </ComboGroups>
+    <DistributionLists>
+        <DistributionList>Awesome List</DistributionList>
+    </DistributionLists>
 </OPTIONS>
 
 "@
@@ -710,18 +710,24 @@ function Call-ANUC_pff {
     Write-LogInfo -LogPath $sLogFile -Message "Mailbox enabled." #Version 1.x
 
     #Send mail to the supervisor #Version 1.x
-    $sMailFrom = $XML.Options.Settings.Email.Administrator
-    $sEmailTo = $XML.Options.Settings.Email.Supervisor
-    $sEmailSubject = $XML.Options.Settings.Email.SubjectToSupervisor
-    $sEmailBody = (Get-Content mailToSupervisor.txt)
-    Send-Email -EmailFrom $sMailFrom -EmailTo $sEmailTo -EmailSubject $sEmailSubject -EmailBody $sEmailBody -EmailHTML $XML.Options.Settings.Email.EnableHtml
+    if($XML.Options.Settings.Email.SendToSupervisor -eq $True){
+        $sMailFrom = $XML.Options.Settings.Email.Administrator
+        $sEmailTo = $XML.Options.Settings.Email.Supervisor
+        $sEmailSubject = $XML.Options.Settings.Email.SubjectToSupervisor
+        $sEmailBody = (Get-Content mailToSupervisor.txt)
+        Send-Email -EmailFrom $sMailFrom -EmailTo $sEmailTo -EmailSubject $sEmailSubject -EmailBody $sEmailBody -EmailHTML $XML.Options.Settings.Email.EnableHtml
+        Write-LogInfo -LogPath $sLogFile -Message "Email sent to supervisor."
+    }
 
     #Send mail to the user #Version 1.x
-    $sMailTo = $sAMAccountName + "@" + $Domain
-    $sEmailSubject = $XML.Options.Settings.Email.SubjectToUser
-    $sEmailBody = (Get-Content mailToUser.txt)
-    Send-Email -EmailFrom $sMailFrom -EmailTo $sMailTo -EmailSubject $sEmailSubject -EmailBody $sEmailBody -EmailHTML $XML.Options.Settings.Email.EnableHtml
-
+    if($XML.Options.Settings.Email.SendToUser -eq $True){
+        $sMailFrom = $XML.Options.Settings.Email.Administrator
+        $sMailTo = $sAMAccountName + "@" + $Domain
+        $sEmailSubject = $XML.Options.Settings.Email.SubjectToUser
+        $sEmailBody = (Get-Content mailToUser.txt)
+        Send-Email -EmailFrom $sMailFrom -EmailTo $sMailTo -EmailSubject $sEmailSubject -EmailBody $sEmailBody -EmailHTML $XML.Options.Settings.Email.EnableHtml
+        Write-LogInfo -LogPath $sLogFile -Message "Email sent to user(s)."
+    }
 }
 
 $cboDomain_SelectedIndexChanged={
@@ -1025,16 +1031,36 @@ $btnSubmitAll_Click={
         $SB.Text = "Done."
         Write-LogInfo -LogPath $sLogFile -Message "Mailbox enabled." #Version 1.x
 
-        #Send mail to the user
-        $sMailBodyForUser = "Hi userPrincipalName, 'nWelcome to the <corporate name>. 'nYou can find help files on your home page."
-        $sMailTo = $sAMAccountName + "@" + $Domain
-        Send-Email -EmailFrom $sMailFrom -EmailTo $sMailTo -EmailSubject "Welcome $userPrincipalName" -EmailBody $sMailBodyForUser -EmailHTML $False
+        #Send mail to the user #Version 1.x
+        if($XML.Options.Settings.Email.SendToUser -eq $True){
+            $sMailFrom = $XML.Options.Settings.Email.Administrator
+            $sMailTo = $sAMAccountName + "@" + $Domain
+            $sEmailSubject = $XML.Options.Settings.Email.SubjectToUser
+            $sEmailBody = (Get-Content mailToUser.txt)
+            Send-Email -EmailFrom $sMailFrom -EmailTo $sMailTo -EmailSubject $sEmailSubject -EmailBody $sEmailBody -EmailHTML $XML.Options.Settings.Email.EnableHtml
+            Write-LogInfo -LogPath $sLogFile -Message "Email sent to user(s)."
+        }
     }
 
-    #Send mail to the supervisor, one for all users in the CSV
-    $sHTMLBodyForAdmin = "Hi Supervisor, 'nNew users created through ANUC today. 'nCreated Accounts: 'n$nameList 'nCreator Admin: $env:username"
-    $sMailFrom = $env:username + "@" + $Domain
-    Send-Email -EmailFrom $sMailFrom -EmailTo "supervisor@anuc.com" -EmailSubject "New Active Directory user created" -EmailBody $sHTMLBodyForAdmin -EmailHTML $False
+    #Send mail to the supervisor #Version 1.x
+    if($XML.Options.Settings.Email.SendToSupervisor -eq $True){
+        $sMailFrom = $XML.Options.Settings.Email.Administrator
+        $sEmailTo = $XML.Options.Settings.Email.Supervisor
+        $sEmailSubject = $XML.Options.Settings.Email.SubjectToSupervisor
+        $sEmailBody = (Get-Content mailToSupervisor.txt)
+        Send-Email -EmailFrom $sMailFrom -EmailTo $sEmailTo -EmailSubject $sEmailSubject -EmailBody $sEmailBody -EmailHTML $XML.Options.Settings.Email.EnableHtml
+        Write-LogInfo -LogPath $sLogFile -Message "Email sent to supervisor."
+    }
+
+        
+
+    
+
+
+
+
+
+
 
     
 }

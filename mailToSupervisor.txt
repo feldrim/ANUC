@@ -1,1 +1,1 @@
-Hi Supervisor, 'nA new user created through ANUC today. 'nCreated Account: $userPrincipalName ($sAMAccountName) 'nCreator Admin: $env:username
+New user(s) created. Check out the logs in .\logs\ANUC.log
