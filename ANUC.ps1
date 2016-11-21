@@ -125,6 +125,52 @@ $CreateXML = @"
             <SubjectToUser>Welcome</SubjectToUser>
             <SMTPServer>SMTP.awesome.local</SMTPServer>
         </Email>
+        <Form>
+            <FileMenu>
+                <File Label="File"/>
+                <CreateCSVTemplate Label="Create CSV Template"/>
+                <FileExplorerDialog Label="Create CSV Template For ANUC"/>
+                <CSVMode Label="CSV Mode"/>
+                <SingleUserMode Label="Single-User Mode"/>
+                <Exit Label="Exit"/>
+            </FileMenu>
+            <FormBody>
+                <CurrentDomain Label="Current Domain" Enabled="True"/>
+                <OU Label="OU" Enabled="True"/>
+                <FirstName Label="First Name" Enabled="True"/>
+                <LastName Label="Last Name" Enabled="True"/>
+                <Office Label="Office" Enabled="True"/>
+                <Title Label="Title" Enabled="True"/>
+                <Description Label="Description" Enabled="True"/>
+                <Department Label="Department" Enabled="True"/>
+                <Company Label="Company" Enabled="True"/>
+                <MobilePhone Label="Mobile Phone" Enabled="True"/>
+                <Site Label="Site" Enabled="True"/>
+                <OfficePhone Label="Office Phone" Enabled="True"/>
+                <OfficeFax Label="Office Fax" Enabled="True"/>
+                <StreetAddress Label="Street Address" Enabled="True"/>
+                <City Label="City" Enabled="True"/>
+                <State Label="State" Enabled="True"/>
+                <PostalCode Label="Postal Code" Enabled="True"/>
+                <DisplayName Label="Display Name"/>
+                <sAMAccountName Label="sAMAccountName"/>
+                <UPN Label="userPrincipalName"/>
+                <Password Label="sAMAccountName"/>
+                <GroupsTemplate Label="Groups Template" Enabled="True"/>
+                <DistributionList Label="Distribution Groups" Enabled="True"/>
+                <SecurityGroups Label="Security Groups" Enabled="True"/>
+                <ComboGroups Label="Combo Groups" Enabled="True"/>
+            </FormBody>
+            <Buttons>
+                <Submit Label="Submit"/>
+                <SubmitAll Label="Submit All"/>
+                <Last Label="Last"/>
+                <Next Label="Next"/>
+                <Previous Label="Prev"/>
+                <First Label="First"/>
+                <ImportCSV Label="Import CSV"/>
+            </Buttons>
+        </Form>
     </Settings>
     <Default>
         <Domain>awesome.local</Domain>
@@ -1197,7 +1243,7 @@ $lblCurrentDomain.Location = '10, 35'
 $lblCurrentDomain.Name = "lblCurrentDomain"
 $lblCurrentDomain.Size = '100, 23'
 $lblCurrentDomain.TabIndex = 39
-$lblCurrentDomain.Text = "Current Domain"
+$lblCurrentDomain.Text = $XML.OPTIONS.Settings.Form.FormBody.CurrentDomain.Label
 $lblCurrentDomain.TextAlign = 'MiddleLeft'
 #
 # cboDomain
@@ -1210,7 +1256,7 @@ $cboDomain.Size = '173, 21'
 $cboDomain.TabIndex = 1
 $cboDomain.add_SelectedIndexChanged($cboDomain_SelectedIndexChanged)
 $cboDomain.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
-$cboDomain.Enabled = $True
+$cboDomain.Enabled = $XML.OPTIONS.Settings.Form.FormBody.CurrentDomain.Enabled
 #
 # lblOU
 #
@@ -1218,7 +1264,7 @@ $lblOU.Location = '10, 65'
 $lblOU.Name = "lblOU"
 $lblOU.Size = '36, 23'
 $lblOU.TabIndex = 26
-$lblOU.Text = "OU"
+$lblOU.Text = $XML.OPTIONS.Settings.Form.FormBody.OU.Label
 $lblOU.TextAlign = 'MiddleLeft'
 #
 # cboPath
@@ -1229,7 +1275,7 @@ $cboPath.Location = '45, 65'
 $cboPath.Name = "cboPath"
 $cboPath.Size = '247, 21'
 $cboPath.TabIndex = 2
-$cboPath.Enabled = $True
+$cboPath.Enabled = $XML.OPTIONS.Settings.Form.FormBody.OU.Enabled
 #
 # lblFirstName
 #
@@ -1237,7 +1283,7 @@ $lblFirstName.Location = '10, 110'
 $lblFirstName.Name = "lblFirstName"
 $lblFirstName.Size = '100, 23'
 $lblFirstName.TabIndex = 12
-$lblFirstName.Text = "First Name"
+$lblFirstName.Text = $XML.OPTIONS.Settings.Form.FormBody.FirstName.Label
 $lblFirstName.TextAlign = 'MiddleLeft'
 #
 # txtFirstName
@@ -1248,7 +1294,7 @@ $txtFirstName.Name = "txtFirstName"
 $txtFirstName.Size = '173, 20'
 $txtFirstName.TabIndex = 3
 $txtFirstName.add_TextChanged($txtName_TextChanged)
-$txtFirstName.Enabled = $True
+$txtFirstName.Enabled = $XML.OPTIONS.Settings.Form.FormBody.FirstName.Enabled
 #
 # lblLastName
 #
@@ -1256,7 +1302,7 @@ $lblLastName.Location = '10, 135'
 $lblLastName.Name = "lblLastName"
 $lblLastName.Size = '100, 23'
 $lblLastName.TabIndex = 13
-$lblLastName.Text = "Last Name"
+$lblLastName.Text = $XML.OPTIONS.Settings.Form.FormBody.LastName.Label
 $lblLastName.TextAlign = 'MiddleLeft'
 #
 # txtLastName
@@ -1267,7 +1313,7 @@ $txtLastName.Name = "txtLastName"
 $txtLastName.Size = '173, 20'
 $txtLastName.TabIndex = 4
 $txtLastName.add_TextChanged($txtName_TextChanged)
-$txtLastName.Enabled = $True
+$txtLastName.Enabled = $XML.OPTIONS.Settings.Form.FormBody.LastName.Enabled
 #
 # lblOffice
 #
@@ -1275,7 +1321,7 @@ $lblOffice.Location = '10, 160'
 $lblOffice.Name = "lblOffice"
 $lblOffice.Size = '100, 23'
 $lblOffice.TabIndex = 20
-$lblOffice.Text = "Office"
+$lblOffice.Text = $XML.OPTIONS.Settings.Form.FormBody.Office.Label
 $lblOffice.TextAlign = 'MiddleLeft'
 #
 # txtOffice
@@ -1285,7 +1331,7 @@ $txtOffice.Location = '118, 160'
 $txtOffice.Name = "txtOffice"
 $txtOffice.Size = '173, 20'
 $txtOffice.TabIndex = 5
-$txtOffice.Enabled = $True
+$txtOffice.Enabled = $XML.OPTIONS.Settings.Form.FormBody.Office.Enabled
 #
 # lblTitle
 #
@@ -1293,7 +1339,7 @@ $lblTitle.Location = '10, 185'
 $lblTitle.Name = "lblTitle"
 $lblTitle.Size = '100, 23'
 $lblTitle.TabIndex = 17
-$lblTitle.Text = "Title"
+$lblTitle.Text = $XML.OPTIONS.Settings.Form.FormBody.Title.Label
 $lblTitle.TextAlign = 'MiddleLeft'
 #
 # cboTitle
@@ -1304,7 +1350,7 @@ $cboTitle.Location = '118, 185'
 $cboTitle.Name = "cboTitle"
 $cboTitle.Size = '173, 20'
 $cboTitle.TabIndex = 6
-$cboTitle.Enabled = $True
+$cboTitle.Enabled = $XML.OPTIONS.Settings.Form.FormBody.Title.Enabled
 #
 # lblDescription
 #
@@ -1312,7 +1358,7 @@ $lblDescription.Location = '10, 210'
 $lblDescription.Name = "lblDescription"
 $lblDescription.Size = '100, 23'
 $lblDescription.TabIndex = 15
-$lblDescription.Text = "Description"
+$lblDescription.Text = $XML.OPTIONS.Settings.Form.FormBody.Description.Label
 $lblDescription.TextAlign = 'MiddleLeft'
 #
 # cboDescription
@@ -1323,7 +1369,7 @@ $cboDescription.Location = '118, 210'
 $cboDescription.Name = "cboDescription"
 $cboDescription.Size = '173, 21'
 $cboDescription.TabIndex = 7
-$cboDescription.Enabled = $True
+$cboDescription.Enabled = $XML.OPTIONS.Settings.Form.FormBody.Description.Enabled
 #
 # lblDepartment
 #
@@ -1331,7 +1377,7 @@ $lblDepartment.Location = '10, 235'
 $lblDepartment.Name = "lblDepartment"
 $lblDepartment.Size = '100, 23'
 $lblDepartment.TabIndex = 18
-$lblDepartment.Text = "Department"
+$lblDepartment.Text = $XML.OPTIONS.Settings.Form.FormBody.Department.Label
 $lblDepartment.TextAlign = 'MiddleLeft'
 #
 # cboDepartment
@@ -1342,7 +1388,7 @@ $cboDepartment.Location = '118, 235'
 $cboDepartment.Name = "cboDepartment"
 $cboDepartment.Size = '173, 21'
 $cboDepartment.TabIndex = 8
-$cboDepartment.Enabled = $True
+$cboDepartment.Enabled = $XML.OPTIONS.Settings.Form.FormBody.Department.Enabled
 #
 # lblCompany
 #
@@ -1350,7 +1396,7 @@ $lblCompany.Location = '10, 260'
 $lblCompany.Name = "lblCompany"
 $lblCompany.Size = '100, 23'
 $lblCompany.TabIndex = 19
-$lblCompany.Text = "Company"
+$lblCompany.Text = $XML.OPTIONS.Settings.Form.FormBody.Company.Label
 $lblCompany.TextAlign = 'MiddleLeft'
 #
 # txtCompany
@@ -1360,7 +1406,7 @@ $txtCompany.Location = '118, 260'
 $txtCompany.Name = "txtCompany"
 $txtCompany.Size = '173, 20'
 $txtCompany.TabIndex = 9
-$txtCompany.Enabled = $True
+$txtCompany.Enabled = $XML.OPTIONS.Settings.Form.FormBody.Company.Enabled
 #
 # lblMobilePhone
 #
@@ -1368,7 +1414,7 @@ $lblMobilePhone.Location = '10, 285'
 $lblMobilePhone.Name = "lblMobilePhone"
 $lblMobilePhone.Size = '100, 23'
 $lblMobilePhone.TabIndex = 14
-$lblMobilePhone.Text = "Mobile Phone"
+$lblMobilePhone.Text = $XML.OPTIONS.Settings.Form.FormBody.MobilePhone.Label
 $lblMobilePhone.TextAlign = 'MiddleLeft'
 #
 # txtMobilePhone
@@ -1378,7 +1424,7 @@ $txtMobilePhone.Location = '118, 285'
 $txtMobilePhone.Name = "txtMobilePhone"
 $txtMobilePhone.Size = '173, 20'
 $txtMobilePhone.TabIndex = 10
-$txtMobilePhone.Enabled = $True
+$txtMobilePhone.Enabled = $XML.OPTIONS.Settings.Form.FormBody.MobilePhone.Enabled
 #
 # lblSite
 #
@@ -1386,7 +1432,7 @@ $lblSite.Location = '10, 320'
 $lblSite.Name = "lblSite"
 $lblSite.Size = '100, 23'
 $lblSite.TabIndex = 44
-$lblSite.Text = "Site"
+$lblSite.Text = $XML.OPTIONS.Settings.Form.FormBody.Site.Label
 $lblSite.TextAlign = 'MiddleLeft'
 #
 # cboSite
@@ -1399,7 +1445,7 @@ $cboSite.Size = '173, 21'
 $cboSite.TabIndex = 11
 $cboSite.add_SelectedIndexChanged($cboSite_SelectedIndexChanged)
 $cboSite.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
-$cboSite.Enabled = $True
+$cboSite.Enabled = $XML.OPTIONS.Settings.Form.FormBody.Site.Enabled
 #
 # lblOfficePhone
 #
@@ -1407,7 +1453,7 @@ $lblOfficePhone.Location = '10, 345'
 $lblOfficePhone.Name = "lblOfficePhone"
 $lblOfficePhone.Size = '100, 23'
 $lblOfficePhone.TabIndex = 14
-$lblOfficePhone.Text = "Office Phone"
+$lblOfficePhone.Text = $XML.OPTIONS.Settings.Form.FormBody.OfficePhone.Label
 $lblOfficePhone.TextAlign = 'MiddleLeft'
 #
 # txtOfficePhone
@@ -1417,7 +1463,7 @@ $txtOfficePhone.Location = '118, 345'
 $txtOfficePhone.Name = "txtOfficePhone"
 $txtOfficePhone.Size = '173, 20'
 $txtOfficePhone.TabIndex = 10
-$txtOfficePhone.Enabled = $True
+$txtOfficePhone.Enabled = $XML.OPTIONS.Settings.Form.FormBody.OfficePhone.Enabled
 #
 # lblFax
 #
@@ -1425,7 +1471,7 @@ $lblFax.Location = '10, 370'
 $lblFax.Name = "lblFax"
 $lblFax.Size = '100, 23'
 $lblFax.TabIndex = 14
-$lblFax.Text = "Office Fax"
+$lblFax.Text = $XML.OPTIONS.Settings.Form.FormBody.OfficeFax.Label
 $lblFax.TextAlign = 'MiddleLeft'
 #
 # txtFax
@@ -1435,7 +1481,7 @@ $txtFax.Location = '118, 370'
 $txtFax.Name = "txtFax"
 $txtFax.Size = '173, 20'
 $txtFax.TabIndex = 10
-$txtFax.Enabled = $True
+$txtFax.Enabled = $XML.OPTIONS.Settings.Form.FormBody.OfficeFax.Enabled
 #
 # lblStreetAddress
 #
@@ -1443,7 +1489,7 @@ $lblStreetAddress.Location = '10, 395'
 $lblStreetAddress.Name = "lblStreetAddress"
 $lblStreetAddress.Size = '100, 23'
 $lblStreetAddress.TabIndex = 21
-$lblStreetAddress.Text = "Street Address"
+$lblStreetAddress.Text = $XML.OPTIONS.Settings.Form.FormBody.StreetAddress.Label
 $lblStreetAddress.TextAlign = 'MiddleLeft'
 #
 # txtStreetAddress
@@ -1453,7 +1499,7 @@ $txtStreetAddress.Location = '118, 395'
 $txtStreetAddress.Name = "txtStreetAddress"
 $txtStreetAddress.Size = '173, 20'
 $txtStreetAddress.TabIndex = 12
-$txtStreetAddress.Enabled = $True
+$txtStreetAddress.Enabled = $XML.OPTIONS.Settings.Form.FormBody.StreetAddress.Enabled
 #
 # lblCity
 #
@@ -1461,7 +1507,7 @@ $lblCity.Location = '10, 420'
 $lblCity.Name = "lblCity"
 $lblCity.Size = '100, 23'
 $lblCity.TabIndex = 22
-$lblCity.Text = "City"
+$lblCity.Text = $XML.OPTIONS.Settings.Form.FormBody.City.Label
 $lblCity.TextAlign = 'MiddleLeft'
 #
 # txtCity
@@ -1471,7 +1517,7 @@ $txtCity.Location = '118, 420'
 $txtCity.Name = "txtCity"
 $txtCity.Size = '173, 20'
 $txtCity.TabIndex = 13
-$txtCity.Enabled = $True
+$txtCity.Enabled = $XML.OPTIONS.Settings.Form.FormBody.City.Enabled
 #
 # lblState
 #
@@ -1479,7 +1525,7 @@ $lblState.Location = '10, 445'
 $lblState.Name = "lblState"
 $lblState.Size = '100, 23'
 $lblState.TabIndex = 23
-$lblState.Text = "State"
+$lblState.Text = $XML.OPTIONS.Settings.Form.FormBody.State.Label
 $lblState.TextAlign = 'MiddleLeft'
 #
 # txtState
@@ -1489,7 +1535,7 @@ $txtState.Location = '118, 445'
 $txtState.Name = "txtState"
 $txtState.Size = '173, 20'
 $txtState.TabIndex = 14
-$txtState.Enabled = $True
+$txtState.Enabled = $XML.OPTIONS.Settings.Form.FormBody.State.Enabled
 #
 # lblPostalCode
 #
@@ -1497,7 +1543,7 @@ $lblPostalCode.Location = '10, 470'
 $lblPostalCode.Name = "lblPostalCode"
 $lblPostalCode.Size = '100, 23'
 $lblPostalCode.TabIndex = 24
-$lblPostalCode.Text = "Postal Code"
+$lblPostalCode.Text = $XML.OPTIONS.Settings.Form.FormBody.PostalCode.Label
 $lblPostalCode.TextAlign = 'MiddleLeft'
 #
 # txtPostalCode
@@ -1507,7 +1553,7 @@ $txtPostalCode.Location = '118, 470'
 $txtPostalCode.Name = "txtPostalCode"
 $txtPostalCode.Size = '173, 20'
 $txtPostalCode.TabIndex = 15
-$txtPostalCode.Enabled = $True
+$txtPostalCode.Enabled = $XML.OPTIONS.Settings.Form.FormBody.PostalCode.Enabled
 #
 # lblDisplayName
 #
@@ -1515,7 +1561,7 @@ $lblDisplayName.Location = '10, 505'
 $lblDisplayName.Name = "lblDisplayName"
 $lblDisplayName.Size = '100, 23'
 $lblDisplayName.TabIndex = 46
-$lblDisplayName.Text = "Display Name"
+$lblDisplayName.Text = $XML.OPTIONS.Settings.Form.FormBody.DisplayName.Label
 $lblDisplayName.TextAlign = 'MiddleLeft'
 #
 # txtDN
@@ -1532,7 +1578,7 @@ $lblSamAccountName.Location = '10, 530'
 $lblSamAccountName.Name = "lblSamAccountName"
 $lblSamAccountName.Size = '100, 23'
 $lblSamAccountName.TabIndex = 47
-$lblSamAccountName.Text = "samAccountName"
+$lblSamAccountName.Text = $XML.OPTIONS.Settings.Form.FormBody.sAMAccountName.Label
 $lblSamAccountName.TextAlign = 'MiddleLeft'
 #
 # txtsAM
@@ -1549,7 +1595,7 @@ $lblUserPrincipalName.Location = '10, 555'
 $lblUserPrincipalName.Name = "lblUserPrincipalName"
 $lblUserPrincipalName.Size = '100, 23'
 $lblUserPrincipalName.TabIndex = 48
-$lblUserPrincipalName.Text = "userPrincipalName"
+$lblUserPrincipalName.Text = $XML.OPTIONS.Settings.Form.FormBody.UPN.Label
 $lblUserPrincipalName.TextAlign = 'MiddleLeft'
 #
 # txtUPN
@@ -1566,7 +1612,7 @@ $lblPassword.Location = '10, 580'
 $lblPassword.Name = "lblPassword"
 $lblPassword.Size = '100, 23'
 $lblPassword.TabIndex = 41
-$lblPassword.Text = "Password"
+$lblPassword.Text = $XML.OPTIONS.Settings.Form.FormBody.Password.Label
 $lblPassword.TextAlign = 'MiddleLeft'
 #
 # txtPassword
@@ -1584,7 +1630,7 @@ $lblGroup.Location = '305, 40'
 $lblGroup.Name = "lblGroup"
 $lblGroup.Size = '100, 23'
 $lblGroup.TabIndex = 44
-$lblGroup.Text = "Groups Template"
+$lblGroup.Text = $XML.OPTIONS.Settings.Form.FormBody.GroupsTemplate.Label
 $lblGroup.TextAlign = 'MiddleLeft'
 #
 # cboGroup                                  #20141120
@@ -1597,7 +1643,7 @@ $cboGroup.Name = "cboGroup"
 $cboGroup.Size = '100, 21'
 $cboGroup.TabIndex = 11
 $cboGroup.add_SelectedIndexChanged($cboGroup_SelectedIndexChanged)
-$cboGroup.Enabled = $True
+$cboGroup.Enabled = $XML.OPTIONS.Settings.Form.FormBody.GroupsTemplate.Enabled
 #
 # lblLists                                  #20141114
 #
@@ -1605,7 +1651,7 @@ $lblLists.Location = '305, 65'
 $lblLists.Name = "lblLists"
 $lblLists.Size = '100, 23'
 $lblLists.Width = 210
-$lblLists.Text = "Distribution Groups"
+$lblLists.Text = $XML.OPTIONS.Settings.Form.FormBody.DistributionList.Label
 $lblLists.TextAlign = 'MiddleLeft'
 #
 # clbLists                                  #20141114
@@ -1615,7 +1661,7 @@ $clbLists.Name = "clbLists"
 $clbLists.Size = '210, 150'
 $clbLists.CheckOnClick = $true;
 $clbLists.TabIndex = 17
-$clbLists.Enabled = $True
+$clbLists.Enabled = $XML.OPTIONS.Settings.Form.FormBody.DistributionList.Enabled
 #
 # lblGroups                                 #20141114
 #
@@ -1623,7 +1669,7 @@ $lblGroups.Location = '305, 245'
 $lblGroups.Name = "lblGroups"
 $lblGroups.Size = '100, 23'
 $lblGroups.Width = 210
-$lblGroups.Text = "Security Groups"
+$lblGroups.Text = $XML.OPTIONS.Settings.Form.FormBody.SecurityGroups.Label
 $lblGroups.TextAlign = 'MiddleLeft'
 #
 # clbGroups                                 #20141114
@@ -1633,7 +1679,7 @@ $clbGroups.Name = "clbGroups"
 $clbGroups.Size = '210, 150'
 $clbGroups.CheckOnClick = $true;
 $clbGroups.TabIndex = 18
-$clbGroups.Enabled = $True
+$clbGroups.Enabled = $XML.OPTIONS.Settings.Form.FormBody.SecurityGroups.Enabled
 #
 # lblCombo                                  #20141120
 #
@@ -1641,7 +1687,7 @@ $lblCombo.Location = '305, 425'
 $lblCombo.Name = "lblCombo"
 $lblCombo.Size = '100, 23'
 $lblCombo.Width = 210
-$lblCombo.Text = "Combo Groups"
+$lblCombo.Text = $XML.OPTIONS.Settings.Form.FormBody.ComboGroups.Label
 $lblCombo.TextAlign = 'MiddleLeft'
 #
 # clbCombo                                  #20141120
@@ -1651,7 +1697,7 @@ $clbCombo.Name = "clbCombo"
 $clbCombo.Size = '210, 150'
 $clbCombo.CheckOnClick = $true;
 $clbCombo.TabIndex = 18
-$clbCombo.Enabled = $True
+$clbCombo.Enabled = $XML.OPTIONS.Settings.Form.FormBody.ComboGroups.Enabled
 #
 # btnSubmit
 #
@@ -1659,7 +1705,7 @@ $btnSubmit.Location = '416, 0'
 $btnSubmit.Name = "btnSubmit"
 $btnSubmit.Size = '100, 25'
 $btnSubmit.TabIndex = 19
-$btnSubmit.Text = "Submit"
+$btnSubmit.Text = $XML.OPTIONS.Settings.Form.Buttons.Submit.Label
 $btnSubmit.UseVisualStyleBackColor = $True
 $btnSubmit.add_Click($btnSubmit_Click)
 #
@@ -1673,44 +1719,44 @@ $SB.Text = "Ready"
 #
 # btnSubmitAll
 #
-$btnSubmitAll.Location = '728, 35'
+$btnSubmitAll.Location = '848, 35'
 $btnSubmitAll.Name = "btnSubmitAll"
 $btnSubmitAll.Size = '75, 25'
 $btnSubmitAll.TabIndex = 59
-$btnSubmitAll.Text = "Submit All"
+$btnSubmitAll.Text = $XML.OPTIONS.Settings.Form.Buttons.SubmitAll.Label
 $btnSubmitAll.UseVisualStyleBackColor = $True
 $btnSubmitAll.Visible = $False
 $btnSubmitAll.add_Click($btnSubmitAll_Click)
 #
 # btnLast
 #
-$btnLast.Location = '697, 35'
+$btnLast.Location = '787, 35'
 $btnLast.Name = "btnLast"
-$btnLast.Size = '30, 25'
+$btnLast.Size = '60, 25'
 $btnLast.TabIndex = 58
-$btnLast.Text = ">>"
+$btnLast.Text = $XML.OPTIONS.Settings.Form.Buttons.Last.Label
 $btnLast.UseVisualStyleBackColor = $True
 $btnLast.Visible = $False
 $btnLast.add_Click($btnLast_Click)
 #
 # btnNext
 #
-$btnNext.Location = '666, 35'
+$btnNext.Location = '726, 35'
 $btnNext.Name = "btnNext"
-$btnNext.Size = '30, 25'
+$btnNext.Size = '60, 25'
 $btnNext.TabIndex = 57
-$btnNext.Text = ">"
+$btnNext.Text = $XML.OPTIONS.Settings.Form.Buttons.Next.Label
 $btnNext.UseVisualStyleBackColor = $True
 $btnNext.Visible = $False
 $btnNext.add_Click($btnNext_Click)
 #
 # btnPrev
 #
-$btnPrev.Location = '635, 35'
+$btnPrev.Location = '665, 35'
 $btnPrev.Name = "btnPrev"
-$btnPrev.Size = '30, 25'
+$btnPrev.Size = '60, 25'
 $btnPrev.TabIndex = 56
-$btnPrev.Text = "<"
+$btnPrev.Text = $XML.OPTIONS.Settings.Form.Buttons.Previous.Label
 $btnPrev.UseVisualStyleBackColor = $True
 $btnPrev.Visible = $False
 $btnPrev.add_Click($btnPrev_Click)
@@ -1719,9 +1765,9 @@ $btnPrev.add_Click($btnPrev_Click)
 #
 $btnFirst.Location = '604, 35'
 $btnFirst.Name = "btnFirst"
-$btnFirst.Size = '30, 25'
+$btnFirst.Size = '60, 25'
 $btnFirst.TabIndex = 55
-$btnFirst.Text = "<<"
+$btnFirst.Text = $XML.OPTIONS.Settings.Form.Buttons.First.Label
 $btnFirst.UseVisualStyleBackColor = $True
 $btnFirst.Visible = $False
 $btnFirst.add_Click($btnFirst_Click)
@@ -1732,7 +1778,7 @@ $btnImportCSV.Location = '528, 35'
 $btnImportCSV.Name = "btnImportCSV"
 $btnImportCSV.Size = '75, 25'
 $btnImportCSV.TabIndex = 54
-$btnImportCSV.Text = "Import CSV"
+$btnImportCSV.Text = $XML.OPTIONS.Settings.Form.Buttons.ImportCSV.Label
 $btnImportCSV.UseVisualStyleBackColor = $True
 $btnImportCSV.Visible = $False
 $btnImportCSV.add_Click($btnImportCSV_Click)
@@ -1766,13 +1812,13 @@ $menustrip1.Text = "menustrip1"
 [void]$fileToolStripMenuItem.DropDownItems.Add($MenuExit)
 $fileToolStripMenuItem.Name = "fileToolStripMenuItem"
 $fileToolStripMenuItem.Size = '37, 20'
-$fileToolStripMenuItem.Text = "File"
+$fileToolStripMenuItem.Text = $XML.OPTIONS.Settings.Form.FileMenu.File.Label
 #
 # formMode
 #
 $formMode.Name = "formMode"
 $formMode.Size = '185, 22'
-$formMode.Text = "CSV Mode"
+$formMode.Text = $XML.OPTIONS.Settings.Form.FileMenu.CSVMode.Label
 $formMode.add_Click($formMode_Click)
 #
 # CSVTemplate
@@ -1782,7 +1828,7 @@ $CSVTemplate.DefaultExt = "csv"
 $CSVTemplate.FileName = Join-Path $ParentFolder "ANUCusers.csv"
 $CSVTemplate.Filter = "CSV Files|*.csv|All Files|*.*"
 $CSVTemplate.ShowHelp = $True
-$CSVTemplate.Title = "Create CSV Template For ANUC"
+$CSVTemplate.Title = $XML.OPTIONS.Settings.Form.FileMenu.FileExplorerDialog.Label
 $CSVTemplate.add_FileOk($CSVTemplate_FileOk)
 #
 # OFDImportCSV
@@ -1794,14 +1840,14 @@ $OFDImportCSV.ShowHelp = $True
 #
 $CreateCSVTemplate.Name = "CreateCSVTemplate"
 $CreateCSVTemplate.Size = '185, 22'
-$CreateCSVTemplate.Text = "Create CSV Template"
+$CreateCSVTemplate.Text = $XML.OPTIONS.Settings.Form.FileMenu.CreateCSVTemplate.Label
 $CreateCSVTemplate.add_Click($createTemplateToolStripMenuItem_Click)
 #
 # MenuExit
 #
 $MenuExit.Name = "MenuExit"
 $MenuExit.Size = '185, 22'
-$MenuExit.Text = "Exit"
+$MenuExit.Text = $XML.OPTIONS.Settings.Form.FileMenu.Exit.Label
 $MenuExit.add_Click($MenuExit_Click)
 
 #endregion Generated Form Code
