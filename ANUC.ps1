@@ -270,7 +270,7 @@ $CreateXML = @"
             $GivenName = $GivenName.ToLower()
             $SurName = $SurName.ToLower()
         }
-        Switch($XML.Options.Settings.sAMAccountName.Style | Where{$_.Enabled -eq $True} | Select -ExpandProperty Format)
+        Switch($XML.Options.Settings.sAMAccountName.Style | Where-Object {$_.Enabled -eq $True} | Select -ExpandProperty Format)
         {
             "FirstName.LastName"    {"{0}.{1}" -f $GivenName,$Surname}
             "FirstInitialLastName"  {"{0}{1}" -f ($GivenName)[0],$SurName}
@@ -293,7 +293,7 @@ $CreateXML = @"
             $GivenName = $GivenName.ToLower()
             $SurName = $SurName.ToLower()
         }
-        Switch($XML.Options.Settings.UPN.Style | Where{$_.Enabled -eq $True} | Select -ExpandProperty Format)
+        Switch($XML.Options.Settings.UPN.Style | Where-Object {$_.Enabled -eq $True} | Select -ExpandProperty Format)
         {
             "FirstName.LastName"    {"{0}.{1}@{2}" -f $GivenName,$Surname,$Domain}
             "FirstInitialLastName"  {"{0}{1}@{2}" -f ($GivenName)[0],$SurName,$Domain}
@@ -310,7 +310,7 @@ $CreateXML = @"
             $SurName = $txtLastName.text
         }
         else{}
-        Switch($XML.Options.Settings.DisplayName.Style | Where{$_.Enabled -eq $True} | Select -ExpandProperty Format)
+        Switch($XML.Options.Settings.DisplayName.Style | Where-Object {$_.Enabled -eq $True} | Select -ExpandProperty Format)
         {
             "FirstName LastName"    {"{0} {1}" -f $GivenName,$Surname}
             "LastName, FirstName"   {"{0}, {1}" -f $SurName, $GivenName}
