@@ -1177,6 +1177,7 @@ $cboDomain.Size = '173, 21'
 $cboDomain.TabIndex = 1
 $cboDomain.add_SelectedIndexChanged($cboDomain_SelectedIndexChanged)
 $cboDomain.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+$cboDomain.Enabled = $True
 #
 # lblOU
 #
@@ -1195,6 +1196,7 @@ $cboPath.Location = '45, 65'
 $cboPath.Name = "cboPath"
 $cboPath.Size = '247, 21'
 $cboPath.TabIndex = 2
+$cboPath.Enabled = $True
 #
 # lblFirstName
 #
@@ -1213,6 +1215,7 @@ $txtFirstName.Name = "txtFirstName"
 $txtFirstName.Size = '173, 20'
 $txtFirstName.TabIndex = 3
 $txtFirstName.add_TextChanged($txtName_TextChanged)
+$txtFirstName.Enabled = $True
 #
 # lblLastName
 #
@@ -1231,6 +1234,7 @@ $txtLastName.Name = "txtLastName"
 $txtLastName.Size = '173, 20'
 $txtLastName.TabIndex = 4
 $txtLastName.add_TextChanged($txtName_TextChanged)
+$txtLastName.Enabled = $True
 #
 # lblOffice
 #
@@ -1248,6 +1252,7 @@ $txtOffice.Location = '118, 160'
 $txtOffice.Name = "txtOffice"
 $txtOffice.Size = '173, 20'
 $txtOffice.TabIndex = 5
+$txtOffice.Enabled = $True
 #
 # lblTitle
 #
@@ -1266,6 +1271,7 @@ $cboTitle.Location = '118, 185'
 $cboTitle.Name = "cboTitle"
 $cboTitle.Size = '173, 20'
 $cboTitle.TabIndex = 6
+$cboTitle.Enabled = $True
 #
 # lblDescription
 #
@@ -1284,6 +1290,7 @@ $cboDescription.Location = '118, 210'
 $cboDescription.Name = "cboDescription"
 $cboDescription.Size = '173, 21'
 $cboDescription.TabIndex = 7
+$cboDescription.Enabled = $True
 #
 # lblDepartment
 #
@@ -1302,6 +1309,7 @@ $cboDepartment.Location = '118, 235'
 $cboDepartment.Name = "cboDepartment"
 $cboDepartment.Size = '173, 21'
 $cboDepartment.TabIndex = 8
+$cboDepartment.Enabled = $True
 #
 # lblCompany
 #
@@ -1319,6 +1327,7 @@ $txtCompany.Location = '118, 260'
 $txtCompany.Name = "txtCompany"
 $txtCompany.Size = '173, 20'
 $txtCompany.TabIndex = 9
+$txtCompany.Enabled = $True
 #
 # lblMobilePhone
 #
@@ -1336,6 +1345,7 @@ $txtMobilePhone.Location = '118, 285'
 $txtMobilePhone.Name = "txtMobilePhone"
 $txtMobilePhone.Size = '173, 20'
 $txtMobilePhone.TabIndex = 10
+$txtMobilePhone.Enabled = $True
 #
 # lblSite
 #
@@ -1356,6 +1366,7 @@ $cboSite.Size = '173, 21'
 $cboSite.TabIndex = 11
 $cboSite.add_SelectedIndexChanged($cboSite_SelectedIndexChanged)
 $cboSite.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+$cboSite.Enabled = $True
 #
 # lblOfficePhone
 #
@@ -1373,6 +1384,7 @@ $txtOfficePhone.Location = '118, 345'
 $txtOfficePhone.Name = "txtOfficePhone"
 $txtOfficePhone.Size = '173, 20'
 $txtOfficePhone.TabIndex = 10
+$txtOfficePhone.Enabled = $True
 #
 # lblFax
 #
@@ -1390,6 +1402,7 @@ $txtFax.Location = '118, 370'
 $txtFax.Name = "txtFax"
 $txtFax.Size = '173, 20'
 $txtFax.TabIndex = 10
+$txtFax.Enabled = $True
 #
 # lblStreetAddress
 #
@@ -1407,6 +1420,7 @@ $txtStreetAddress.Location = '118, 395'
 $txtStreetAddress.Name = "txtStreetAddress"
 $txtStreetAddress.Size = '173, 20'
 $txtStreetAddress.TabIndex = 12
+$txtStreetAddress.Enabled = $True
 #
 # lblCity
 #
@@ -1424,6 +1438,7 @@ $txtCity.Location = '118, 420'
 $txtCity.Name = "txtCity"
 $txtCity.Size = '173, 20'
 $txtCity.TabIndex = 13
+$txtCity.Enabled = $True
 #
 # lblState
 #
@@ -1441,6 +1456,7 @@ $txtState.Location = '118, 445'
 $txtState.Name = "txtState"
 $txtState.Size = '173, 20'
 $txtState.TabIndex = 14
+$txtState.Enabled = $True
 #
 # lblPostalCode
 #
@@ -1458,6 +1474,7 @@ $txtPostalCode.Location = '118, 470'
 $txtPostalCode.Name = "txtPostalCode"
 $txtPostalCode.Size = '173, 20'
 $txtPostalCode.TabIndex = 15
+$txtPostalCode.Enabled = $True
 #
 # lblDisplayName
 #
@@ -1547,6 +1564,7 @@ $cboGroup.Name = "cboGroup"
 $cboGroup.Size = '100, 21'
 $cboGroup.TabIndex = 11
 $cboGroup.add_SelectedIndexChanged($cboGroup_SelectedIndexChanged)
+$cboGroup.Enabled = $True
 #
 # lblLists                                  #20141114
 #
@@ -1564,6 +1582,7 @@ $clbLists.Name = "clbLists"
 $clbLists.Size = '210, 150'
 $clbLists.CheckOnClick = $true;
 $clbLists.TabIndex = 17
+$clbLists.Enabled = $True
 #
 # lblGroups                                 #20141114
 #
@@ -1581,6 +1600,7 @@ $clbGroups.Name = "clbGroups"
 $clbGroups.Size = '210, 150'
 $clbGroups.CheckOnClick = $true;
 $clbGroups.TabIndex = 18
+$clbGroups.Enabled = $True
 #
 # lblCombo                                  #20141120
 #
@@ -1598,6 +1618,7 @@ $clbCombo.Name = "clbCombo"
 $clbCombo.Size = '210, 150'
 $clbCombo.CheckOnClick = $true;
 $clbCombo.TabIndex = 18
+$clbCombo.Enabled = $True
 #
 # btnSubmit
 #
