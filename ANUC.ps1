@@ -270,7 +270,7 @@ $CreateXML = @"
             $GivenName = $GivenName.ToLower()
             $SurName = $SurName.ToLower()
         }
-        Switch($XML.Options.Settings.sAMAccountName.Style | Where-Object {$_.Enabled -eq $True} | Select -ExpandProperty Format)
+        Switch($XML.Options.Settings.sAMAccountName.Style | Where-Object {$_.Enabled -eq $True} | Select-Object -ExpandProperty Format)
         {
             "FirstName.LastName"    {"{0}.{1}" -f $GivenName,$Surname}
             "FirstInitialLastName"  {"{0}{1}" -f ($GivenName)[0],$SurName}
@@ -293,7 +293,7 @@ $CreateXML = @"
             $GivenName = $GivenName.ToLower()
             $SurName = $SurName.ToLower()
         }
-        Switch($XML.Options.Settings.UPN.Style | Where-Object {$_.Enabled -eq $True} | Select -ExpandProperty Format)
+        Switch($XML.Options.Settings.UPN.Style | Where-Object {$_.Enabled -eq $True} | Select-Object -ExpandProperty Format)
         {
             "FirstName.LastName"    {"{0}.{1}@{2}" -f $GivenName,$Surname,$Domain}
             "FirstInitialLastName"  {"{0}{1}@{2}" -f ($GivenName)[0],$SurName,$Domain}
@@ -310,7 +310,7 @@ $CreateXML = @"
             $SurName = $txtLastName.text
         }
         else{}
-        Switch($XML.Options.Settings.DisplayName.Style | Where-Object {$_.Enabled -eq $True} | Select -ExpandProperty Format)
+        Switch($XML.Options.Settings.DisplayName.Style | Where-Object {$_.Enabled -eq $True} | Select-Object -ExpandProperty Format)
         {
             "FirstName LastName"    {"{0} {1}" -f $GivenName,$Surname}
             "LastName, FirstName"   {"{0}, {1}" -f $SurName, $GivenName}
@@ -523,7 +523,7 @@ function Call-ANUC_pff {
         $XML.Options.Domains.Domain | ForEach-Object{$cboDomain.Items.Add($_.Name)}
         
         Write-Verbose "Adding OUs to combo box"
-        $XML.Options.Domains.Domain | Where-Object{$_.Name -match $cboDomain.Text} | Select -ExpandProperty Path | ForEach-Object{$cboPath.Items.Add($_)}
+        $XML.Options.Domains.Domain | Where-Object{$_.Name -match $cboDomain.Text} | Select-Object -ExpandProperty Path | ForEach-Object{$cboPath.Items.Add($_)}
         
         Write-Verbose "Adding descriptions to combo box"
         $XML.Options.Descriptions.Description | ForEach-Object{$cboDescription.Items.Add($_)}
@@ -720,7 +720,7 @@ function Call-ANUC_pff {
 $cboDomain_SelectedIndexChanged={
     $cboPath.Items.Clear()
     Write-Verbose "Adding OUs to combo box"
-    $XML.Options.Domains.Domain | Where-Object{$_.Name -match $cboDomain.Text} | Select -ExpandProperty Path | ForEach-Object{$cboPath.Items.Add($_)}   
+    $XML.Options.Domains.Domain | Where-Object{$_.Name -match $cboDomain.Text} | Select-Object -ExpandProperty Path | ForEach-Object{$cboPath.Items.Add($_)}   
     Write-Verbose "Creating required account fields"
     
     if ($XML.Options.Settings.DisplayName.Generate) {$txtDN.Text = Set-DisplayName}
@@ -765,7 +765,7 @@ $createTemplateToolStripMenuItem_Click={
 
 $CSVTemplate_FileOk=[System.ComponentModel.CancelEventHandler]{
     "" |
-    Select Domain,Path,FirstName,LastName,Office,Title,Description,Department,Company,Phone,StreetAddress,City,State,PostalCode,Password,sAMAccountName,userPrincipalName,DisplayName |
+    Select-Object Domain,Path,FirstName,LastName,Office,Title,Description,Department,Company,Phone,StreetAddress,City,State,PostalCode,Password,sAMAccountName,userPrincipalName,DisplayName |
     Export-CSV $CSVTemplate.FileName -NoTypeInformation 
 }
 
