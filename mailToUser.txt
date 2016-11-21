@@ -1,0 +1,1 @@
+Hi $userPrincipalName, 'nWelcome to the <corporate name>. 'nYou can find help files on your home page.

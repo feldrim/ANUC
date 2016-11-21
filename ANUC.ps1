@@ -26,8 +26,6 @@
 
     #> #Version 1.x
 
-[CmdletBinding()] #Version 1.x
-
 
 #For debugging
 $oldVerbosePreference = $VerbosePreference
@@ -120,6 +118,12 @@ $CreateXML = @"
     </Subfolders>
     <HomeDrive>U:</HomeDrive>
     <HomePage>http://your.homepage.com/</HomePage>
+    <Email EnableHtml="True">
+    	<Administrator>admin@anuc.com</Administrator>
+    	<Supervisor>supervisor@anuc.com</Supervisor>
+    	<SubjectToSupervisor>New User Created</SubjectToSupervisor>
+    	<SubjectToUser>Welcome</SubjectToUser>
+    </Email>
     <SMTPServer>SMTP.awesome.local</SMTPServer>
   </Settings>
   <Default>
@@ -705,15 +709,18 @@ function Call-ANUC_pff {
     $SB.Text = "Done."
     Write-LogInfo -LogPath $sLogFile -Message "Mailbox enabled." #Version 1.x
 
-    #Send mail to the supervisor
-    $sHTMLBodyForAdmin = "Hi Supervisor, 'nA new user created through ANUC today. 'nCreated Account: $userPrincipalName ($sAMAccountName) 'nCreator Admin: $env:username"
-    $sMailFrom = $env:username + "@" + $Domain
-    Send-Email -EmailFrom $sMailFrom -EmailTo "supervisor@anuc.com" -EmailSubject "New Active Directory user created" -EmailBody $sHTMLBodyForAdmin -EmailHTML $False
+    #Send mail to the supervisor #Version 1.x
+    $sMailFrom = $XML.Options.Settings.Email.Administrator
+    $sEmailTo = $XML.Options.Settings.Email.Supervisor
+    $sEmailSubject = $XML.Options.Settings.Email.SubjectToSupervisor
+    $sEmailBody = (Get-Content mailToSupervisor.txt)
+    Send-Email -EmailFrom $sMailFrom -EmailTo $sEmailTo -EmailSubject $sEmailSubject -EmailBody $sEmailBody -EmailHTML $XML.Options.Settings.Email.EnableHtml
 
-    #Send mail to the user
-    $sMailBodyForUser = "Hi userPrincipalName, 'nWelcome to the <corporate name>. 'nYou can find help files on your home page."
+    #Send mail to the user #Version 1.x
     $sMailTo = $sAMAccountName + "@" + $Domain
-    Send-Email -EmailFrom $sMailFrom -EmailTo $sMailTo -EmailSubject "Welcome $userPrincipalName" -EmailBody $sMailBodyForUser -EmailHTML $False
+    $sEmailSubject = $XML.Options.Settings.Email.SubjectToUser
+    $sEmailBody = (Get-Content mailToUser.txt)
+    Send-Email -EmailFrom $sMailFrom -EmailTo $sMailTo -EmailSubject $sEmailSubject -EmailBody $sEmailBody -EmailHTML $XML.Options.Settings.Email.EnableHtml
 
 }
 
