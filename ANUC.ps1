@@ -520,34 +520,34 @@ function Call-ANUC_pff {
         $formMain.Text = $formMain.Text + " " + $XML.Options.Version + " (" + $env:UserDomainName + "\" + $env:username + " on " + $env:ComputerName + ")"
         
         Write-Verbose "Adding domains to combo box"
-        $XML.Options.Domains.Domain | %{$cboDomain.Items.Add($_.Name)}
+        $XML.Options.Domains.Domain | ForEach-Object{$cboDomain.Items.Add($_.Name)}
         
         Write-Verbose "Adding OUs to combo box"
-        $XML.Options.Domains.Domain | ?{$_.Name -match $cboDomain.Text} | Select -ExpandProperty Path | %{$cboPath.Items.Add($_)}
+        $XML.Options.Domains.Domain | ?{$_.Name -match $cboDomain.Text} | Select -ExpandProperty Path | ForEach-Object{$cboPath.Items.Add($_)}
         
         Write-Verbose "Adding descriptions to combo box"
-        $XML.Options.Descriptions.Description | %{$cboDescription.Items.Add($_)}
+        $XML.Options.Descriptions.Description | ForEach-Object{$cboDescription.Items.Add($_)}
         
         Write-Verbose "Adding titles to combo box"
-        $XML.Options.JobTitles.JobTitle | %{$cboTitle.Items.Add($_)}
+        $XML.Options.JobTitles.JobTitle | ForEach-Object{$cboTitle.Items.Add($_)}
         
         Write-Verbose "Adding sites to combo box"
-        $XML.Options.Locations.Location | %{$cboSite.Items.Add($_.Site)}
+        $XML.Options.Locations.Location | ForEach-Object{$cboSite.Items.Add($_.Site)}
         
         Write-Verbose "Adding departments to combo box"
-        $XML.Options.Departments.Department | %{$cboDepartment.Items.Add($_)}
+        $XML.Options.Departments.Department | ForEach-Object{$cboDepartment.Items.Add($_)}
         
         Write-Verbose "Adding groups to combo box"
-        $XML.Options.Groups.Group | %{$cboGroup.Items.Add($_.Name)} #20141120
+        $XML.Options.Groups.Group | ForEach-Object{$cboGroup.Items.Add($_.Name)} #20141120
 
         Write-Verbose "Adding groups to checked list box"
-        $XML.Options.SecurityGroups.SecurityGroup | %{$clbGroups.Items.Add($_)} #20141114
+        $XML.Options.SecurityGroups.SecurityGroup | ForEach-Object{$clbGroups.Items.Add($_)} #20141114
         
         Write-Verbose "Adding lists to checked list box"
-        $XML.Options.DistributionLists.DistributionList | %{$clbLists.Items.Add($_)} #20141114
+        $XML.Options.DistributionLists.DistributionList | ForEach-Object{$clbLists.Items.Add($_)} #20141114
         
         Write-Verbose "Adding combo to checked list box"
-        $XML.Options.ComboGroups.ComboGroup | %{$clbCombo.Items.Add($_)} #20141120
+        $XML.Options.ComboGroups.ComboGroup | ForEach-Object{$clbCombo.Items.Add($_)} #20141120
         
         Write-Verbose "Setting default fields"
         $cboDomain.SelectedItem = $XML.Options.Default.Domain
@@ -571,7 +571,7 @@ function Call-ANUC_pff {
 
         Write-Verbose "Creating CSV Headers"
         $Headers = @('ID','Domain','Path','FirstName','LastName','Office','Title','Description','Department','Company','Phone','Fax','Mobile','StreetAddress','City','State','PostalCode','Password','sAMAccountName','userPrincipalName','DisplayName')
-        $Headers| %{[Void]$lvCSV.Columns.Add($_)}
+        $Headers| ForEach-Object{[Void]$lvCSV.Columns.Add($_)}
         
         Write-LogInfo -LogPath $sLogFile -Message "Form created." #Version 1.x
     }
@@ -720,7 +720,7 @@ function Call-ANUC_pff {
 $cboDomain_SelectedIndexChanged={
     $cboPath.Items.Clear()
     Write-Verbose "Adding OUs to combo box"
-    $XML.Options.Domains.Domain | ?{$_.Name -match $cboDomain.Text} | Select -ExpandProperty Path | %{$cboPath.Items.Add($_)}   
+    $XML.Options.Domains.Domain | ?{$_.Name -match $cboDomain.Text} | Select -ExpandProperty Path | ForEach-Object{$cboPath.Items.Add($_)}   
     Write-Verbose "Creating required account fields"
     
     if ($XML.Options.Settings.DisplayName.Generate) {$txtDN.Text = Set-DisplayName}
@@ -742,12 +742,12 @@ $cboSite_SelectedIndexChanged={
 $cboGroup_SelectedIndexChanged={ #20141120
     Write-Verbose "Updating groups fields with list information"
     $Group = @($XML.Options.Groups.Group | ? {$_.Name -match $cboGroup.Text}) #20141120
-    $arrayGroups = @($Group | % { $_.List } | ? { $_.Type -match "SecurityGroup" } | % { $_.'#text' } ) #20141120
-    #$arrayGroups = @($GroupLists | % { $_.'#text' } ) #20141120
+    $arrayGroups = @($Group | ForEach-Object { $_.List } | ? { $_.Type -match "SecurityGroup" } | ForEach-Object { $_.'#text' } ) #20141120
+    #$arrayGroups = @($GroupLists | ForEach-Object { $_.'#text' } ) #20141120
     for ($i = 0; $i -lt $clbGroups.Items.Count; $i++) { if($arrayGroups -Contains $clbGroups.Items[$i]){ $clbGroups.SetItemChecked( $i, $true ) } else { $clbGroups.SetItemChecked( $i, $false ) } } #20141114
-    $arrayLists = @($Group | % { $_.List } | ? { $_.Type -match "DistributionList" } | % { $_.'#text' } ) #20141120
+    $arrayLists = @($Group | ForEach-Object { $_.List } | ? { $_.Type -match "DistributionList" } | ForEach-Object { $_.'#text' } ) #20141120
     for ($i = 0; $i -lt $clbLists.Items.Count; $i++) { if($arrayLists -Contains $clbLists.Items[$i]) { $clbLists.SetItemChecked( $i, $true ) } else { $clbLists.SetItemChecked( $i, $false ) } } #20141114
-    $arrayCombo = @($Group | % { $_.List } | ? { $_.Type -match "ComboGroup" } | % { $_.'#text' } ) #20141120
+    $arrayCombo = @($Group | ForEach-Object { $_.List } | ? { $_.Type -match "ComboGroup" } | ForEach-Object { $_.'#text' } ) #20141120
     for ($i = 0; $i -lt $clbCombo.Items.Count; $i++) { if($arrayCombo -Contains $clbCombo.Items[$i]) { $clbCombo.SetItemChecked( $i, $true ) } else { $clbCombo.SetItemChecked( $i, $false ) } } #20141120
 }
 
@@ -772,9 +772,9 @@ $CSVTemplate_FileOk=[System.ComponentModel.CancelEventHandler]{
 $formMode_Click={
     if($formMode.Text -eq 'CSV Mode'){
         $formMode.Text = "Single-User Mode"
-        Get-Variable | ?{$_.Name -match "txt"} | %{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
-        Get-Variable | ?{$_.Name -match "cbo"} | %{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
-        Get-Variable | ?{$_.Name -match "btn"} | %{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
+        Get-Variable | ?{$_.Name -match "txt"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
+        Get-Variable | ?{$_.Name -match "cbo"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
+        Get-Variable | ?{$_.Name -match "btn"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
         $formMain.Size = '1724,670'
         $formMain.FormBorderStyle = 'Fixed3D'
         $formMain.MaximizeBox = $False
@@ -815,9 +815,9 @@ $formMode_Click={
         $formMain.FormBorderStyle = 'Fixed3D'
         $formMain.MaximizeBox = $False
         $formMain.MinimizeBox = $False
-        Get-Variable | ?{$_.Name -match "txt"} | %{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
-        Get-Variable | ?{$_.Name -match "cbo"} | %{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
-        Get-Variable | ?{$_.Name -match "btn"} | %{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
+        Get-Variable | ?{$_.Name -match "txt"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
+        Get-Variable | ?{$_.Name -match "cbo"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
+        Get-Variable | ?{$_.Name -match "btn"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
         $btnFirst.Visible = $False
         $btnPrev.Visible = $False
         $btnNext.Visible = $False
@@ -874,13 +874,13 @@ $lvCSV_SelectedIndexChanged={
 }
 
 $btnFirst_Click={
-    $lvCSV.Items | %{$_.Selected = $False}
+    $lvCSV.Items | ForEach-Object{$_.Selected = $False}
     $lvCSV.Items[0].Selected = $True
 }
 
 $btnLast_Click={
     $LastRow = ($lvCSV.Items).Count - 1
-    $lvCSV.Items | %{$_.Selected = $False}
+    $lvCSV.Items | ForEach-Object{$_.Selected = $False}
     $lvCSV.Items[$LastRow].Selected = $True
 }
 
@@ -888,7 +888,7 @@ $btnNext_Click={
     $LastRow = ($lvCSV.Items).Count - 1
     [Int]$Index = $lvCSV.SelectedItems[0].Index
     if($LastRow -gt $Index){
-        $lvCSV.Items | %{$_.Selected = $False}
+        $lvCSV.Items | ForEach-Object{$_.Selected = $False}
         $lvCSV.Items[$Index+1].Selected = $True
     }
 }
@@ -896,7 +896,7 @@ $btnNext_Click={
 $btnPrev_Click={
     [Int]$Index = $lvCSV.SelectedItems[0].Index
     if($Index -gt 0){
-        $lvCSV.Items | %{$_.Selected = $False}
+        $lvCSV.Items | ForEach-Object{$_.Selected = $False}
         $lvCSV.Items[$Index-1].Selected = $True
     }
 }
@@ -906,7 +906,7 @@ $MenuExit_Click={
 }
 
 $btnSubmitAll_Click={
-    $lvCSV.Items | %{
+    $lvCSV.Items | ForEach-Object{
         
         $Domain = $_.Subitems[1].Text
         $Path = $_.Subitems[2].Text
