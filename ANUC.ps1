@@ -523,7 +523,7 @@ function Call-ANUC_pff {
         $XML.Options.Domains.Domain | ForEach-Object{$cboDomain.Items.Add($_.Name)}
         
         Write-Verbose "Adding OUs to combo box"
-        $XML.Options.Domains.Domain | ?{$_.Name -match $cboDomain.Text} | Select -ExpandProperty Path | ForEach-Object{$cboPath.Items.Add($_)}
+        $XML.Options.Domains.Domain | Where-Object{$_.Name -match $cboDomain.Text} | Select -ExpandProperty Path | ForEach-Object{$cboPath.Items.Add($_)}
         
         Write-Verbose "Adding descriptions to combo box"
         $XML.Options.Descriptions.Description | ForEach-Object{$cboDescription.Items.Add($_)}
@@ -720,7 +720,7 @@ function Call-ANUC_pff {
 $cboDomain_SelectedIndexChanged={
     $cboPath.Items.Clear()
     Write-Verbose "Adding OUs to combo box"
-    $XML.Options.Domains.Domain | ?{$_.Name -match $cboDomain.Text} | Select -ExpandProperty Path | ForEach-Object{$cboPath.Items.Add($_)}   
+    $XML.Options.Domains.Domain | Where-Object{$_.Name -match $cboDomain.Text} | Select -ExpandProperty Path | ForEach-Object{$cboPath.Items.Add($_)}   
     Write-Verbose "Creating required account fields"
     
     if ($XML.Options.Settings.DisplayName.Generate) {$txtDN.Text = Set-DisplayName}
@@ -730,7 +730,7 @@ $cboDomain_SelectedIndexChanged={
 
 $cboSite_SelectedIndexChanged={
     Write-Verbose "Updating site fields with address information"
-    $Site = $XML.Options.Locations.Location | ?{$_.Site -match $cboSite.Text}
+    $Site = $XML.Options.Locations.Location | Where-Object{$_.Site -match $cboSite.Text}
     $txtStreetAddress.Text = $Site.StreetAddress
     $txtCity.Text = $Site.City
     $txtState.Text = $Site.State
@@ -741,13 +741,13 @@ $cboSite_SelectedIndexChanged={
 
 $cboGroup_SelectedIndexChanged={ #20141120
     Write-Verbose "Updating groups fields with list information"
-    $Group = @($XML.Options.Groups.Group | ? {$_.Name -match $cboGroup.Text}) #20141120
-    $arrayGroups = @($Group | ForEach-Object { $_.List } | ? { $_.Type -match "SecurityGroup" } | ForEach-Object { $_.'#text' } ) #20141120
+    $Group = @($XML.Options.Groups.Group | Where-Object {$_.Name -match $cboGroup.Text}) #20141120
+    $arrayGroups = @($Group | ForEach-Object { $_.List } | Where-Object { $_.Type -match "SecurityGroup" } | ForEach-Object { $_.'#text' } ) #20141120
     #$arrayGroups = @($GroupLists | ForEach-Object { $_.'#text' } ) #20141120
     for ($i = 0; $i -lt $clbGroups.Items.Count; $i++) { if($arrayGroups -Contains $clbGroups.Items[$i]){ $clbGroups.SetItemChecked( $i, $true ) } else { $clbGroups.SetItemChecked( $i, $false ) } } #20141114
-    $arrayLists = @($Group | ForEach-Object { $_.List } | ? { $_.Type -match "DistributionList" } | ForEach-Object { $_.'#text' } ) #20141120
+    $arrayLists = @($Group | ForEach-Object { $_.List } | Where-Object { $_.Type -match "DistributionList" } | ForEach-Object { $_.'#text' } ) #20141120
     for ($i = 0; $i -lt $clbLists.Items.Count; $i++) { if($arrayLists -Contains $clbLists.Items[$i]) { $clbLists.SetItemChecked( $i, $true ) } else { $clbLists.SetItemChecked( $i, $false ) } } #20141114
-    $arrayCombo = @($Group | ForEach-Object { $_.List } | ? { $_.Type -match "ComboGroup" } | ForEach-Object { $_.'#text' } ) #20141120
+    $arrayCombo = @($Group | ForEach-Object { $_.List } | Where-Object { $_.Type -match "ComboGroup" } | ForEach-Object { $_.'#text' } ) #20141120
     for ($i = 0; $i -lt $clbCombo.Items.Count; $i++) { if($arrayCombo -Contains $clbCombo.Items[$i]) { $clbCombo.SetItemChecked( $i, $true ) } else { $clbCombo.SetItemChecked( $i, $false ) } } #20141120
 }
 
@@ -772,9 +772,9 @@ $CSVTemplate_FileOk=[System.ComponentModel.CancelEventHandler]{
 $formMode_Click={
     if($formMode.Text -eq 'CSV Mode'){
         $formMode.Text = "Single-User Mode"
-        Get-Variable | ?{$_.Name -match "txt"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
-        Get-Variable | ?{$_.Name -match "cbo"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
-        Get-Variable | ?{$_.Name -match "btn"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
+        Get-Variable | Where-Object{$_.Name -match "txt"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
+        Get-Variable | Where-Object{$_.Name -match "cbo"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
+        Get-Variable | Where-Object{$_.Name -match "btn"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left'}catch{}}
         $formMain.Size = '1724,670'
         $formMain.FormBorderStyle = 'Fixed3D'
         $formMain.MaximizeBox = $False
@@ -815,9 +815,9 @@ $formMode_Click={
         $formMain.FormBorderStyle = 'Fixed3D'
         $formMain.MaximizeBox = $False
         $formMain.MinimizeBox = $False
-        Get-Variable | ?{$_.Name -match "txt"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
-        Get-Variable | ?{$_.Name -match "cbo"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
-        Get-Variable | ?{$_.Name -match "btn"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
+        Get-Variable | Where-Object{$_.Name -match "txt"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
+        Get-Variable | Where-Object{$_.Name -match "cbo"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
+        Get-Variable | Where-Object{$_.Name -match "btn"} | ForEach-Object{Try{$_.Value.Anchor = 'Top,Left,Right'}catch{}}
         $btnFirst.Visible = $False
         $btnPrev.Visible = $False
         $btnNext.Visible = $False
@@ -834,7 +834,7 @@ $btnImportCSV_Click={
     $i = 0
     ForEach ($Entry in $CSV){
         $User = New-Object System.Windows.Forms.ListViewItem($i)
-        ForEach ($Col in ($lvCSV.Columns | ?{$_.Text -ne "ID"})){
+        ForEach ($Col in ($lvCSV.Columns | Where-Object{$_.Text -ne "ID"})){
             $Field = $Col.Text
             $SubItem = "$($Entry.$Field)"
             if($Field -eq 'FirstName'){$Script:GivenName = $SubItem}
