@@ -760,7 +760,7 @@ function Call-ANUC_pff {
         $sMailFrom = $XML.Options.Settings.Email.Administrator
         $sEmailTo = $XML.Options.Settings.Email.Supervisor
         $sEmailSubject = $XML.Options.Settings.Email.SubjectToSupervisor
-        $sEmailBody = (Get-Content mailToSupervisor.txt)
+        $sEmailBody = (Get-Content mailTemplates\mailToSupervisor.txt)
         Send-Email -EmailFrom $sMailFrom -EmailTo $sEmailTo -EmailSubject $sEmailSubject -EmailBody $sEmailBody -EmailHTML $XML.Options.Settings.Email.EnableHtml
         Write-LogInfo -LogPath $sLogFile -Message "Email sent to supervisor."
     }
@@ -770,7 +770,7 @@ function Call-ANUC_pff {
         $sMailFrom = $XML.Options.Settings.Email.Administrator
         $sMailTo = $sAMAccountName + "@" + $Domain
         $sEmailSubject = $XML.Options.Settings.Email.SubjectToUser
-        $sEmailBody = (Get-Content mailToUser.txt)
+        $sEmailBody = (Get-Content mailTemplates\mailToUser.txt)
         Send-Email -EmailFrom $sMailFrom -EmailTo $sMailTo -EmailSubject $sEmailSubject -EmailBody $sEmailBody -EmailHTML $XML.Options.Settings.Email.EnableHtml
         Write-LogInfo -LogPath $sLogFile -Message "Email sent to user(s)."
     }
@@ -1082,7 +1082,7 @@ $btnSubmitAll_Click={
             $sMailFrom = $XML.Options.Settings.Email.Administrator
             $sMailTo = $sAMAccountName + "@" + $Domain
             $sEmailSubject = $XML.Options.Settings.Email.SubjectToUser
-            $sEmailBody = (Get-Content mailToUser.txt)
+            $sEmailBody = (Get-Content mailTemplates\mailToUser.txt)
             Send-Email -EmailFrom $sMailFrom -EmailTo $sMailTo -EmailSubject $sEmailSubject -EmailBody $sEmailBody -EmailHTML $XML.Options.Settings.Email.EnableHtml
             Write-LogInfo -LogPath $sLogFile -Message "Email sent to user(s)."
         }
@@ -1093,7 +1093,7 @@ $btnSubmitAll_Click={
         $sMailFrom = $XML.Options.Settings.Email.Administrator
         $sEmailTo = $XML.Options.Settings.Email.Supervisor
         $sEmailSubject = $XML.Options.Settings.Email.SubjectToSupervisor
-        $sEmailBody = (Get-Content mailToSupervisor.txt)
+        $sEmailBody = (Get-Content mailTemplates\mailToSupervisor.txt)
         Send-Email -EmailFrom $sMailFrom -EmailTo $sEmailTo -EmailSubject $sEmailSubject -EmailBody $sEmailBody -EmailHTML $XML.Options.Settings.Email.EnableHtml
         Write-LogInfo -LogPath $sLogFile -Message "Email sent to supervisor."
     }
